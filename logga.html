@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mensappen – Logga din mens</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="phone">
+    <div class="status">9:41</div>
+
+    <main class="screen log">
+      <a class="back" href="index.html">← Tillbaka</a>
+      <h1 class="h1">Logga din mens</h1>
+
+      <p class="label">Datum</p>
+      <div class="chips" data-single role="group" aria-label="Datum">
+        <button type="button" class="chip" aria-pressed="true">Idag 9 nov</button>
+        <button type="button" class="chip" aria-pressed="false">Igår</button>
+        <button type="button" class="chip" aria-pressed="false">Välj datum</button>
+      </div>
+
+      <p class="label">Blödning</p>
+      <div class="chips" data-single role="group" aria-label="Blödning">
+        <button type="button" class="chip" aria-pressed="false">Lätt</button>
+        <button type="button" class="chip" aria-pressed="true">Medel</button>
+        <button type="button" class="chip" aria-pressed="false">Riklig</button>
+      </div>
+
+      <p class="label">Symtom (valfritt)</p>
+      <div class="chips" role="group" aria-label="Symtom">
+        <button type="button" class="chip" aria-pressed="true">Mensvärk</button>
+        <button type="button" class="chip" aria-pressed="false">Huvudvärk</button>
+        <button type="button" class="chip" aria-pressed="false">Trötthet</button>
+        <button type="button" class="chip" aria-pressed="false">Humör</button>
+        <button type="button" class="chip" aria-pressed="false">Värmevallning</button>
+        <button type="button" class="chip" aria-pressed="false">Sömn</button>
+        <button type="button" class="chip" data-action="add-symptom">+ Lägg till</button>
+      </div>
+
+      <label class="label" for="note">Anteckning</label>
+      <textarea id="note" class="textarea" placeholder="Skriv något…"></textarea>
+
+      <div class="actions">
+        <a class="btn btn-primary" href="index.html">Spara</a>
+      </div>
+    </main>
+
+    <nav class="tabbar" aria-label="Huvudmeny">
+      <a class="tab" href="index.html">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="14" cy="8" r="4"/><circle cx="7.5" cy="19" r="4"/><circle cx="20.5" cy="19" r="4"/></svg>
+        <span>Översikt</span>
+      </a>
+      <a class="tab" href="kalender.html">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="5.5" width="20" height="18" rx="2.5"/><path d="M4 11h20M9.5 3v5M18.5 3v5"/><g fill="currentColor" stroke="none"><circle cx="9.5" cy="15" r="1.2"/><circle cx="14" cy="15" r="1.2"/><circle cx="18.5" cy="15" r="1.2"/><circle cx="9.5" cy="19.3" r="1.2"/><circle cx="14" cy="19.3" r="1.2"/><circle cx="18.5" cy="19.3" r="1.2"/></g></svg>
+        <span>Kalender</span>
+      </a>
+      <a class="tab" href="leverans.html">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M8 7h11v12H8M19 11h4l3 4v4h-7"/><circle cx="11" cy="20.5" r="2.2"/><circle cx="22" cy="20.5" r="2.2"/><path d="M2 10h6M3 14h5M4 18h3"/></svg>
+        <span>Leverans</span>
+      </a>
+      <a class="tab" href="profil.html">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="14" cy="14" r="11"/><circle cx="14" cy="11.5" r="4"/><path d="M6.8 22.2c1.6-3 4.2-4.4 7.2-4.4s5.6 1.4 7.2 4.4"/></svg>
+        <span>Profil</span>
+      </a>
+    </nav>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mensappen – Ditt paket</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="phone">
+    <div class="status">9:41</div>
+
+    <main class="screen" data-package>
+      <a class="back" href="javascript:history.back()">← Tillbaka</a>
+      <h1 class="h1">Ditt paket</h1>
+      <p class="lead small" style="font-size:15px;margin-top:6px">Välj det du brukar använda. Ändra när som helst.</p>
+
+      <p class="label wine">Mensskydd</p>
+      <div class="list">
+        <div class="row" data-price="59">
+          <label class="check"><input type="checkbox" checked> Bindor dag</label>
+          <div class="stepper"><button type="button" data-step="-1" aria-label="Minska">−</button><output>1</output><button type="button" data-step="1" aria-label="Öka">+</button></div>
+        </div>
+        <div class="row" data-price="65">
+          <label class="check"><input type="checkbox"> Bindor natt</label>
+          <div class="stepper"><button type="button" data-step="-1" aria-label="Minska">−</button><output>0</output><button type="button" data-step="1" aria-label="Öka">+</button></div>
+        </div>
+        <div class="row" data-price="55">
+          <label class="check"><input type="checkbox"> Tamponger</label>
+          <div class="stepper"><button type="button" data-step="-1" aria-label="Minska">−</button><output>0</output><button type="button" data-step="1" aria-label="Öka">+</button></div>
+        </div>
+        <div class="row" data-price="39">
+          <label class="check"><input type="checkbox" checked> Trosskydd</label>
+          <div class="stepper"><button type="button" data-step="-1" aria-label="Minska">−</button><output>1</output><button type="button" data-step="1" aria-label="Öka">+</button></div>
+        </div>
+      </div>
+
+      <p class="label wine">Tillägg (valfritt)</p>
+      <div class="list">
+        <div class="row" data-price="51"><label class="check"><input type="checkbox" checked> Toapapper</label></div>
+        <div class="row" data-price="79"><label class="check"><input type="checkbox"> Rengöring för menskopp</label></div>
+        <div class="row" data-price="89"><label class="check"><input type="checkbox"> Kondomer</label></div>
+      </div>
+
+      <p class="label wine">När ska vi fråga?</p>
+      <label class="radio"><input type="radio" name="when" checked> Inför varje mens (rekommenderas)</label>
+      <label class="radio"><input type="radio" name="when"> Fast intervall</label>
+    </main>
+
+    <footer class="savebar">
+      <div>
+        <small>Totalt</small>
+        <strong data-total>149 kr</strong>
+      </div>
+      <a class="btn btn-primary" href="leverans.html">Spara paket</a>
+    </footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

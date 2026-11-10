@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mensappen – Profil</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="phone">
+    <div class="status">9:41</div>
+
+    <main class="screen">
+      <div class="profile-head">
+        <div class="avatar" aria-hidden="true">F</div>
+        <div>
+          <h1 class="h1">Fina</h1>
+          <p>Medlem sedan mars 2026</p>
+        </div>
+      </div>
+
+      <p class="label wine">Min cykel</p>
+      <div class="list">
+        <a class="row" href="kalender.html">Cykellängd <span class="value">28 dagar <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+        <a class="row" href="kalender.html">Menslängd <span class="value">5 dagar <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+        <a class="row" href="logga.html">Logga mens eller symtom <span class="value"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+      </div>
+
+      <p class="label wine">Leverans</p>
+      <div class="list">
+        <a class="row" href="paket.html">Ditt paket <span class="value">149 kr <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+        <a class="row" href="paket.html">När vi frågar <span class="value">Inför varje mens <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+        <a class="row" href="#">Leveransadress <span class="value">Storgatan 1 <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+        <a class="row" href="rackte.html">Räckte senaste paketet? <span class="value">Svara <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+      </div>
+
+      <p class="label wine">Påminnelser</p>
+      <div class="list">
+        <div class="row">
+          <label for="r1">Inför mensen</label>
+          <span class="switch"><input id="r1" type="checkbox" role="switch" checked><span></span></span>
+        </div>
+        <div class="row">
+          <label for="r2">Koka menskoppen</label>
+          <span class="switch"><input id="r2" type="checkbox" role="switch" checked><span></span></span>
+        </div>
+        <div class="row">
+          <label for="r3">Logga symtom</label>
+          <span class="switch"><input id="r3" type="checkbox" role="switch"><span></span></span>
+        </div>
+      </div>
+
+      <p class="label wine">Integritet</p>
+      <div class="list">
+        <a class="row" href="#">Exportera mina data <span class="value"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+        <a class="row danger" href="#">Radera konto</a>
+      </div>
+      <p class="fineprint">Din cykeldata används bara för att anpassa appen och ditt paket – aldrig för reklam.</p>
+
+      <a class="link wine logout" href="index.html">Logga ut</a>
+    </main>
+
+    <nav class="tabbar" aria-label="Huvudmeny">
+      <a class="tab" href="index.html">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="14" cy="8" r="4"/><circle cx="7.5" cy="19" r="4"/><circle cx="20.5" cy="19" r="4"/></svg>
+        <span>Översikt</span>
+      </a>
+      <a class="tab" href="kalender.html">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="5.5" width="20" height="18" rx="2.5"/><path d="M4 11h20M9.5 3v5M18.5 3v5"/><g fill="currentColor" stroke="none"><circle cx="9.5" cy="15" r="1.2"/><circle cx="14" cy="15" r="1.2"/><circle cx="18.5" cy="15" r="1.2"/><circle cx="9.5" cy="19.3" r="1.2"/><circle cx="14" cy="19.3" r="1.2"/><circle cx="18.5" cy="19.3" r="1.2"/></g></svg>
+        <span>Kalender</span>
+      </a>
+      <a class="tab" href="leverans.html">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M8 7h11v12H8M19 11h4l3 4v4h-7"/><circle cx="11" cy="20.5" r="2.2"/><circle cx="22" cy="20.5" r="2.2"/><path d="M2 10h6M3 14h5M4 18h3"/></svg>
+        <span>Leverans</span>
+      </a>
+      <a class="tab" href="profil.html" aria-current="page">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="14" cy="14" r="11"/><circle cx="14" cy="11.5" r="4"/><path d="M6.8 22.2c1.6-3 4.2-4.4 7.2-4.4s5.6 1.4 7.2 4.4"/></svg>
+        <span>Profil</span>
+      </a>
+    </nav>
+  </div>
+</body>
+</html>

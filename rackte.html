@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mensappen – Räckte ditt paket?</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="phone">
+    <div class="status">9:41</div>
+
+    <main class="screen feedback">
+      <a class="back" href="index.html">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg>
+        Stäng
+      </a>
+
+      <p class="kicker">Din mens verkar vara slut</p>
+      <h1 class="h1">Räckte ditt paket?</h1>
+      <p class="lead">Ditt svar hjälper oss föreslå rätt mängd nästa gång.</p>
+
+      <div class="choices">
+        <button type="button" class="btn btn-outline" data-answer="lite">För lite</button>
+        <button type="button" class="btn btn-outline" data-answer="lagom">Lagom</button>
+        <button type="button" class="btn btn-outline" data-answer="mycket">För mycket</button>
+      </div>
+      <p class="thanks" data-thanks role="status"></p>
+      <a class="link wine skip" href="index.html">Hoppa över</a>
+
+      <hr class="divider">
+
+      <section class="card wine cup-card">
+        <h2>Använder du menskopp?</h2>
+        <p>Koka den i 10 minuter efter mensen och låt den torka.</p>
+        <div class="switch-row">
+          <label for="remind">Påminn mig varje månad</label>
+          <span class="switch"><input id="remind" type="checkbox" role="switch" checked><span></span></span>
+        </div>
+      </section>
+
+      <p class="fineprint">Svaret används bara för att anpassa ditt paket – aldrig för reklam.</p>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

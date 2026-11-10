@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mensappen – Kalender</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="phone">
+    <div class="status">9:41</div>
+
+    <main class="screen">
+      <h1 class="h1">Kalender</h1>
+      <p class="lead small" style="font-size:15px;margin-top:6px">Tryck på en dag för att logga.</p>
+
+      <div class="month-nav">
+        <button type="button" data-month="-1" aria-label="Föregående månad">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2L4 7l5 5"/></svg>
+        </button>
+        <h2 data-month-title aria-live="polite">november 2026</h2>
+        <button type="button" data-month="1" aria-label="Nästa månad">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg>
+        </button>
+      </div>
+
+      <section class="card cal" aria-label="Månadskalender">
+        <div class="cal-head" aria-hidden="true">
+          <span>MÅ</span><span>TI</span><span>ON</span><span>TO</span><span>FR</span><span>LÖ</span><span>SÖ</span>
+        </div>
+        <div class="cal-grid" data-cal-grid></div>
+      </section>
+
+      <div class="legend">
+        <span><i class="l-period"></i>Mens</span>
+        <span><i class="l-pred"></i>Beräknad mens</span>
+        <span><i class="l-ovu"></i>Ägglossning</span>
+        <span><i class="l-today"></i>Idag</span>
+      </div>
+
+      <div class="stats">
+        <div class="card stat"><small>Snittcykel</small><strong>28 dagar</strong></div>
+        <div class="card stat"><small>Mensen varar</small><strong>ca 5 dagar</strong></div>
+      </div>
+
+      <p class="label wine">Senast loggat</p>
+      <ul class="list history">
+        <li><b>29 okt · Mensen började</b><span>Medel · Mensvärk, Trötthet</span></li>
+        <li><b>1 okt · Mensen började</b><span>Riklig · Mensvärk, Huvudvärk</span></li>
+        <li><b>3 sep · Mensen började</b><span>Medel · Humör</span></li>
+      </ul>
+    </main>
+
+    <nav class="tabbar" aria-label="Huvudmeny">
+      <a class="tab" href="index.html">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="14" cy="8" r="4"/><circle cx="7.5" cy="19" r="4"/><circle cx="20.5" cy="19" r="4"/></svg>
+        <span>Översikt</span>
+      </a>
+      <a class="tab" href="kalender.html" aria-current="page">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="5.5" width="20" height="18" rx="2.5"/><path d="M4 11h20M9.5 3v5M18.5 3v5"/><g fill="currentColor" stroke="none"><circle cx="9.5" cy="15" r="1.2"/><circle cx="14" cy="15" r="1.2"/><circle cx="18.5" cy="15" r="1.2"/><circle cx="9.5" cy="19.3" r="1.2"/><circle cx="14" cy="19.3" r="1.2"/><circle cx="18.5" cy="19.3" r="1.2"/></g></svg>
+        <span>Kalender</span>
+      </a>
+      <a class="tab" href="leverans.html">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M8 7h11v12H8M19 11h4l3 4v4h-7"/><circle cx="11" cy="20.5" r="2.2"/><circle cx="22" cy="20.5" r="2.2"/><path d="M2 10h6M3 14h5M4 18h3"/></svg>
+        <span>Leverans</span>
+      </a>
+      <a class="tab" href="profil.html">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="14" cy="14" r="11"/><circle cx="14" cy="11.5" r="4"/><path d="M6.8 22.2c1.6-3 4.2-4.4 7.2-4.4s5.6 1.4 7.2 4.4"/></svg>
+        <span>Profil</span>
+      </a>
+    </nav>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
