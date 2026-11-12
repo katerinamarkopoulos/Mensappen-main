@@ -966,6 +966,8 @@ body.multi-mode .tabbar { visibility: hidden; }
 .screen:has(> .kronblad-badge) > .h1 { padding-right: 64px; }
 .screen:has(> .kronblad-badge) > .cal-tools { margin-top: 18px; }
 .screen:has(> .kronblad-badge) > .profile-head { padding-right: 64px; }
+/* Leveranssidan: bilden börjar under kronbladsloggan i hörnet */
+.screen:has(> .kronblad-badge) > .hero { margin-top: 26px; }
 .kronblad-card { margin-top: 22px; text-align: center; display: flex; flex-direction: column; align-items: center; padding: 22px 20px 20px; }
 .flower { width: 220px; height: 220px; overflow: visible; }
 .flower .petal { fill: transparent; stroke: #b9aab3; stroke-width: 1.6; stroke-dasharray: 3.5 3.5; }
