@@ -101,7 +101,7 @@ if (registerForm) {
     });
     const same = state.logs.find((l) => l.date === iso && l.type === "mens");
     if (same) same.start = true;
-    else state.logs.push({ id: String(Date.now()), date: iso, type: "mens", start: true, flow: "", symptoms: [], note: "" });
+    else state.logs.push({ id: String(Date.now()), date: iso, type: "mens", start: true, flow: "", symptoms: [], note: "", updated: new Date().toISOString() });
   };
   const lastStart = () => {
     const s = state.logs.filter((l) => l.start).map((l) => l.date).sort();

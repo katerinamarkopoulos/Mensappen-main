@@ -59,6 +59,50 @@ document.querySelectorAll("a.back").forEach((a) => {
 // Visa sparade ändringar även när man går tillbaka med webbläsarens bakåtknapp
 window.addEventListener("pageshow", (e) => { if (e.persisted) location.reload(); });
 
+/* ---------- Ny dag: kalendern och cykeln följer dagens datum ----------
+   Sidan räknar allt utifrån datumet när den öppnades (APP_TODAY i auth.js). Blir det ett nytt
+   dygn medan appen är öppen – eller när man kommer tillbaka till den – laddas sidan om.
+   All data är redan sparad, så inget försvinner. Ingen bakgrundsprocess: en timer till midnatt
+   plus en koll när appen syns igen (timers pausas ofta när mobilen sover). */
+(() => {
+  if (params.get("dag")) return; // förhandsvisning av en annan cykeldag
+  const loadedOn = toISO(APP_TODAY);
+  const busy = () => {
+    const a = document.activeElement;
+    // Vänta om man håller på att skriva eller har ett ark öppet, så att inget halvfärdigt försvinner
+    return (a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) || document.querySelector(".sheet:not([hidden])");
+  };
+  const check = () => {
+    if (toISO(new Date()) === loadedOn) return schedule();
+    if (document.visibilityState !== "visible" || busy()) return setTimeout(check, 60000);
+    location.reload();
+  };
+  let timer = null;
+  const schedule = () => {
+    clearTimeout(timer);
+    const now = new Date();
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    timer = setTimeout(check, Math.min(midnight - now + 1000, 3600000)); // max en timme, t.ex. vid tidszonsbyte
+  };
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") check(); });
+  window.addEventListener("focus", check);
+  schedule();
+})();
+
+// Öppen i flera flikar: har en annan flik sparat ändringar laddas den här om, så att den inte
+// skriver över nya loggningar med sin gamla kopia nästa gång den sparar
+window.addEventListener("storage", (e) => {
+  if (e.key !== Auth.stateKey() && e.key !== "mensappen-session") return;
+  const a = document.activeElement;
+  if (a && /^(INPUT|TEXTAREA)$/.test(a.tagName)) return; // skriver man något just nu får det vara kvar
+  location.reload();
+});
+
+// Be webbläsaren att inte rensa appens data automatiskt (t.ex. när lagringen blir full)
+try {
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persisted().then((p) => p || navigator.storage.persist()).catch(() => {});
+} catch (e) {}
+
 /* ===============================================================
    Cykelmodell – räknas fram ur sparade mensstarter
    Tips: lägg till ?dag=20 i adressen för att förhandsvisa en annan cykeldag.
@@ -96,12 +140,21 @@ CYCLE.autoPeriod = averagePeriod(starts);
 CYCLE.length = state.settings.cycleLength || CYCLE.autoLength; // eget värde från Profil går före
 CYCLE.period = state.settings.periodLength || CYCLE.autoPeriod;
 CYCLE.ovulation = Math.max(CYCLE.period + 2, CYCLE.length - 14); // ägglossning ca 14 dagar före nästa mens
-CYCLE.start = starts[starts.length - 1] || addDays(CYCLE.today, -11);
+// Utan loggad mens hittar appen inte på någon cykel: inga cykeldagar eller prognoser visas.
+// (Startdatumet nedan används då bara internt, t.ex. för paketets standardleverans.)
+CYCLE.hasData = starts.length > 0;
+// Prognosen bygger på bara en mens och inget eget värde – visas som en tydlig uppskattning
+CYCLE.standardLength = starts.length < 2 && !state.settings.cycleLength;
+CYCLE.start = starts[starts.length - 1] || new Date(CYCLE.today);
 
 const dagParam = Number(params.get("dag"));
 if (dagParam >= 1 && dagParam <= CYCLE.length) CYCLE.today = addDays(CYCLE.start, dagParam - 1);
 
 const today = CYCLE.today;
+// Dagar sedan senaste mensstart (1 = startdagen). Går det längre än en cykel är mensen sen –
+// då börjar appen inte om på en påhittad ny cykel.
+CYCLE.sinceStart = daysBetween(CYCLE.start, today) + 1;
+CYCLE.daysLate = CYCLE.hasData ? Math.max(0, CYCLE.sinceStart - CYCLE.length) : 0;
 
 // Cykeldag (1 = första mensdagen) räknat från senaste start
 const cycleDay = (date) => {
@@ -116,9 +169,10 @@ const phaseFor = (day) => {
   return "lutealfasen";
 };
 
-const todayDay = cycleDay(today);
-const daysToPeriod = CYCLE.length - todayDay + 1;
-const nextPeriod = addDays(today, daysToPeriod);
+const todayDay = CYCLE.daysLate ? CYCLE.length : cycleDay(today);
+const daysToPeriod = CYCLE.daysLate ? 0 : CYCLE.length - todayDay + 1;
+// Är mensen sen räknas nästa beräknade mens från i morgon
+const nextPeriod = addDays(today, CYCLE.daysLate ? 1 : daysToPeriod);
 const askDate = addDays(nextPeriod, -CYCLE.askBefore);
 const daysToOvulation = CYCLE.ovulation - todayDay;
 const ovulationDate = addDays(today, daysToOvulation);
@@ -137,7 +191,11 @@ setText("[data-user-email]", user.email);
 setText("[data-member-since]", "Medlem sedan " + fmt(new Date(user.created), { month: "long", year: "numeric" }));
 const contraception = PROFILE_OPTIONS.contraception.find((o) => o.id === state.profile.contraception);
 document.querySelectorAll("[data-hormonal-note]").forEach((el) => (el.hidden = !(contraception && contraception.hormonal)));
-document.querySelectorAll("[data-no-logs]").forEach((el) => (el.hidden = starts.length > 0));
+document.querySelectorAll("[data-no-logs]").forEach((el) => {
+  el.hidden = !CYCLE.standardLength;
+  if (CYCLE.hasData) el.textContent = "Uppskattning utifrån en vanlig cykel på " + dagar(CYCLE.length) + ". Ju fler mensar du loggar, desto mer träffsäker blir prognosen.";
+});
+document.querySelectorAll("[data-phase-open]").forEach((el) => (el.hidden = !CYCLE.hasData));
 setText("[data-phase]", phaseFor(todayDay));
 
 /* ===============================================================
@@ -185,7 +243,7 @@ const PHASES = [
     tip: "Regelbundna måltider, sömn och rörelse kan göra PMS lättare. Bra tid att kolla att paketet är på väg.",
   },
 ];
-const currentPhase = PHASES.find((p) => p.key === phaseFor(todayDay));
+const currentPhase = CYCLE.hasData ? PHASES.find((p) => p.key === phaseFor(todayDay)) : null;
 const rangeText = (p) => {
   const [a, b] = p.range();
   return a === b ? "Dag " + a : "Dag " + a + "–" + b;
@@ -298,6 +356,26 @@ setText(
   : daysToOvulation === 0 ? "Ägglossning ca idag"
   : "Ägglossningen har passerat"
 );
+// Mensen är sen: visa det i stället för en ny påhittad cykel
+if (CYCLE.daysLate) {
+  setText("[data-cycle-day]", "Dag " + CYCLE.sinceStart);
+  document.querySelectorAll("[data-period-line]").forEach((el) =>
+    (el.textContent = "Mensen är ca " + dagar(CYCLE.daysLate) + " sen enligt uppskattningen"));
+}
+// Leveransfrågan (leverans.html)
+document.querySelectorAll("[data-delivery-lead]").forEach((el) => {
+  if (!CYCLE.hasData) el.textContent = "Vill du få ditt paket hemskickat? Logga din mens så kan vi anpassa leveransen efter din cykel.";
+  else if (CYCLE.daysLate) el.textContent = "Enligt uppskattningen är mensen ca " + dagar(CYCLE.daysLate) + " sen. Vill du få ditt paket hemskickat?";
+});
+// Ingen loggad mens: inga cykeldagar, ingen ägglossning och inget datum för nästa mens
+if (!CYCLE.hasData) {
+  setText("[data-cycle-day]", "–");
+  setText("[data-cycle-length]", "ingen mens loggad");
+  document.querySelectorAll("[data-period-line], [data-ovu-line]").forEach((el) => (el.hidden = true));
+  setText("[data-next-period]", "när du loggat din mens");
+  document.querySelectorAll("[data-delivery-meta]").forEach((el) =>
+    (el.textContent = "Logga din mens så vet vi när vi ska fråga · Inget skickas utan ditt ja"));
+}
 
 /* ---------- Paketet: summa och etiketter ---------- */
 const packageTotal = () =>
@@ -359,17 +437,23 @@ if (ring) {
   };
 
   for (let i = 1; i <= CYCLE.length; i++) {
-    const passed = i <= todayDay;
+    const passed = CYCLE.hasData && i <= todayDay;
     const color = passed ? mix(todayDay === 1 ? 1 : (i - 1) / (CYCLE.length - 1)) : FUTURE;
     if (i === CYCLE.ovulation) {
       const [x, y] = pos(i, R);
-      ring.append(el("circle", { cx: x, cy: y, r: 6, fill: passed ? color : "#df62a0" }));
+      ring.append(el("circle", { cx: x, cy: y, r: 6, fill: passed ? color : CYCLE.hasData ? "#df62a0" : FUTURE }));
     } else {
       const [x1, y1] = pos(i, R - 7);
       const [x2, y2] = pos(i, R + 7);
       ring.append(el("line", { x1, y1, x2, y2, stroke: color, "stroke-width": 4, "stroke-linecap": "round" }));
     }
   }
+  if (!CYCLE.hasData) {
+    // Ingen loggad mens: tom ring utan markör, och inga påhittade datum att bläddra mellan
+    ring.removeAttribute("tabindex");
+    ring.setAttribute("role", "img");
+    ring.setAttribute("aria-label", "Cykelring, ingen mens loggad än");
+  } else {
   // "Du är här"-markör för idag
   const [tx, ty] = pos(todayDay, R);
   ring.append(el("circle", { cx: tx, cy: ty, r: 9, fill: "#fff", stroke: mix(1), "stroke-width": 3.5 }));
@@ -481,6 +565,7 @@ if (ring) {
   ring.addEventListener("blur", reset);
   ring.setAttribute("aria-valuemax", CYCLE.length);
   reset();
+  }
 }
 
 /* ===============================================================
@@ -721,7 +806,8 @@ const upsertLog = (date, type, fields) => {
     log = { id: newId(), date: iso, type, flow: "", symptoms: [], note: "" };
     state.logs.push(log);
   }
-  Object.assign(log, fields, { start });
+  // updated: när loggen senast ändrades – behövs för att kunna slå ihop data mellan enheter utan dubbletter
+  Object.assign(log, fields, { start, updated: new Date().toISOString() });
   return log;
 };
 // Tar bort en logg. Var det mensens första dag tar nästa mensdag över som start.
@@ -1144,13 +1230,24 @@ const dayInfo = (date) => {
   // Lucka: en dag mellan två loggade mensdagar som inte är loggad – mensen pågick troligen då
   const gap = !logged && !estimate && d - 1 < Math.max(...offsets);
   if (next) return { period: logged || (estimate && d <= CYCLE.period), gap, ovulation: d === CYCLE.ovulation, day: d, logged };
-  const c = ((d - 1) % CYCLE.length) + 1;
-  const firstCycle = d <= CYCLE.length;
+  // Pågående cykel (fram till idag, även om mensen är sen): bara det som hänt, inga prognoser bakåt i tiden
+  if (date <= today || d <= CYCLE.length) {
+    return {
+      logged,
+      gap,
+      period: logged || (estimate && d <= CYCLE.period && date <= today),
+      predicted: !logged && !gap && estimate && d <= CYCLE.period && date > today,
+      ovulation: d === CYCLE.ovulation,
+      day: d,
+    };
+  }
+  // Framtiden: beräknade cykler räknat från nästa beräknade mens (uppskattning)
+  const c = ((daysBetween(nextPeriod, date) % CYCLE.length) + CYCLE.length) % CYCLE.length + 1;
   return {
     logged,
-    gap,
-    period: logged || (estimate && c <= CYCLE.period && firstCycle && date <= today),
-    predicted: !logged && !gap && c <= CYCLE.period && !(firstCycle && date <= today),
+    gap: false,
+    period: logged,
+    predicted: !logged && c <= CYCLE.period,
     ovulation: c === CYCLE.ovulation,
     day: c,
   };
@@ -1704,7 +1801,9 @@ if (exportOpen && exportSheet) {
       row("Menslängd", dagar(CYCLE.period) + (state.settings.periodLength ? " (angiven av mig)" : measured.length ? " (snitt av loggade mensperioder)" : " (standardvärde, för få loggningar)")),
       measured.length ? row("Menslängd, variation", span(measured)) : "",
       row("Senaste mens började", last ? date(last.start) : "Inte loggad"),
-      row("Nästa mens beräknas", date(nextPeriod)),
+      row("Nästa mens beräknas", !CYCLE.hasData ? "Kan inte beräknas – ingen mens loggad"
+        : CYCLE.daysLate ? "Mensen är ca " + dagar(CYCLE.daysLate) + " sen (uppskattning)"
+        : date(nextPeriod) + " (uppskattning)"),
       row("Antal loggade mensperioder", String(periods.length)),
     ].join("");
 
