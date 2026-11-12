@@ -709,6 +709,7 @@ if (orderOpen && orderSheet) {
     if (state.package.when === "cycle") state.package.deliveryDate = null;
     state.orders = [...(state.orders || []), { date: toISO(today), total: packageTotal() }]; // ger ett kronblad
     if (!saveState()) return;
+    updateKronbladBadge();
     orderSheet.querySelector("[data-order-receipt]").textContent =
       "Vi skickar det till " + addressText(address()) + ". Det är hemma hos dig " +
       (arrive ? "den " + fmt(arrive, { day: "numeric", month: "long" }) : "inom 1–2 dagar") + ". Du fick också ett kronblad!";
@@ -824,6 +825,9 @@ const removeLog = (date, type) => {
   }
 };
 const findLog = (date, type) => state.logs.find((l) => l.date === toISO(date) && l.type === type);
+// Namn på en loggning i listor och rapporten
+const logLabel = (l) => (l.start ? "Mensen började" : l.type === "mens" ? "Mens" : l.type === "sex" ? "Sex" : "Symtom");
+const logDetails = (l) => [l.flow, l.protection, (l.symptoms || []).join(", "), l.note].filter(Boolean).join(" · ");
 
 /* ===============================================================
    Logga: egna symtom, datumväljare och spara
@@ -944,7 +948,21 @@ if (pickBtn && picker) {
 
 const saveLogBtn = document.querySelector("[data-save-log]");
 if (saveLogBtn) {
-  const type = params.get("typ") === "symtom" ? "symtom" : "mens";
+  const type = ["symtom", "sex"].includes(params.get("typ")) ? params.get("typ") : "mens";
+  if (type === "sex") {
+    setText("[data-log-title]", "Logga sex");
+    document.title = "Blomstra – Logga sex";
+    document.querySelectorAll("[data-flow-section], [data-symptom-section]").forEach((el) => (el.hidden = true));
+    document.querySelectorAll("[data-sex-section]").forEach((el) => (el.hidden = false));
+    setText(".picker-title", "Vilken dag?");
+    // Finns det redan en loggning den dagen fylls den i
+    const prev = findLog(logDate, "sex");
+    if (prev) {
+      document.querySelectorAll("[data-protection] .chip").forEach((c) => c.setAttribute("aria-pressed", String(c.textContent.trim() === prev.protection)));
+      const n = document.querySelector("#note");
+      if (n) n.value = prev.note || "";
+    }
+  }
   if (type === "symtom") {
     setText("[data-log-title]", "Logga symtom");
     document.title = "Blomstra – Logga symtom";
@@ -958,6 +976,16 @@ if (saveLogBtn) {
     const symptoms = pressed("[data-symptoms]");
     const flow = type === "mens" ? pressed("[data-flow]")[0] || "" : "";
     const note = (document.querySelector("#note") || {}).value || "";
+    if (type === "sex") {
+      upsertLog(logDate, "sex", { protection: pressed("[data-protection]")[0] || "", note: note.trim() });
+      const status = document.querySelector("[data-log-status]");
+      if (saveState()) {
+        saveLogBtn.textContent = "Sparat ✓";
+        if (status) status.textContent = "Sex loggat " + shortDate(logDate) + ".";
+        setTimeout(() => location.replace(cameFrom("index.html")), 900);
+      } else if (status) status.textContent = "Kunde inte spara på den här enheten.";
+      return;
+    }
 
     // Inom 10 dagar efter en start räknas det som samma mens (se upsertLog)
     const start = upsertLog(logDate, type, { flow, symptoms, note: note.trim() }).start;
@@ -1205,6 +1233,7 @@ document.querySelectorAll("[data-answer]").forEach((btn) => {
     saveState();
     const msg = document.querySelector("[data-thanks]");
     if (msg) msg.textContent = "Tack! Vi anpassar ditt nästa paket." + (kronbladEarned() > before ? " Du fick ett kronblad!" : "");
+    updateKronbladBadge();
     setTimeout(() => (location.href = "index.html"), 1200);
   });
 });
@@ -1301,6 +1330,7 @@ if (calGrid) {
       else if (info.predicted) { cell.classList.add("predicted"); label.push("beräknad mens"); }
       if (info.ovulation) { cell.classList.add("ovulation"); label.push("ägglossning"); }
       if (findLog(date, "symtom")) { cell.classList.add("has-symptom"); label.push("symtom loggat"); }
+      if (findLog(date, "sex")) { cell.classList.add("has-sex"); label.push("sex loggat"); }
       if (sameDay(date, today)) { cell.classList.add("today"); label.push("idag"); cell.setAttribute("aria-current", "date"); }
       if (past && multi) {
         const on = selected.has(toISO(date));
@@ -1379,6 +1409,10 @@ if (calGrid) {
     const flowSection = daySheet.querySelector("[data-day-flow-section]");
     const flowChips = [...daySheet.querySelectorAll("[data-day-flow] .chip")];
     const symptomBox = daySheet.querySelector("[data-day-symptoms]");
+    const sexSwitch = daySheet.querySelector("[data-day-sex]");
+    const protSection = daySheet.querySelector("[data-day-protection-section]");
+    const protChips = [...daySheet.querySelectorAll("[data-day-protection] .chip")];
+    sexSwitch.addEventListener("change", () => (protSection.hidden = !sexSwitch.checked));
     let current = null;
 
     mensSwitch.addEventListener("change", () => {
@@ -1403,6 +1437,10 @@ if (calGrid) {
       symptomBox.innerHTML = "";
       [...DEFAULT_SYMPTOMS, ...state.customSymptoms, ...[...chosen].filter((x) => !DEFAULT_SYMPTOMS.includes(x) && !state.customSymptoms.includes(x))]
         .forEach((name) => symptomBox.append(makeChip(name, chosen.has(name))));
+      const sex = findLog(date, "sex");
+      sexSwitch.checked = !!sex;
+      protSection.hidden = !sex;
+      protChips.forEach((c) => c.setAttribute("aria-pressed", String(!!sex && c.textContent.trim() === sex.protection)));
       daySheet.querySelector("[data-day-more]").href = "logga.html?datum=" + toISO(date) + "&typ=" + (mens ? "mens" : "symtom");
       sheet.open();
     };
@@ -1425,6 +1463,16 @@ if (calGrid) {
         else if (sym && !sym.note) removeLog(date, "symtom");
         msg = symptoms.length ? "Symtom sparade " + shortDate(date) : hadMens ? "Mens borttagen " + shortDate(date) : "Sparat " + shortDate(date);
       }
+      // Sex: sparas som en egen loggning så att en anteckning från Logga-sidan finns kvar
+      const hadSex = findLog(date, "sex");
+      if (sexSwitch.checked) {
+        const prot = protChips.find((c) => c.getAttribute("aria-pressed") === "true");
+        upsertLog(date, "sex", { protection: prot ? prot.textContent.trim() : "" });
+        if (!hadSex) msg = msg.startsWith("Sparat") ? "Sex loggat " + shortDate(date) : msg + " · sex loggat";
+      } else if (hadSex) {
+        removeLog(date, "sex");
+        msg = msg.startsWith("Sparat") ? "Sex borttaget " + shortDate(date) : msg;
+      }
       if (saveState()) reloadWith(msg);
     });
   }
@@ -1444,10 +1492,9 @@ if (historyList) {
   logs.forEach((l) => {
     const li = document.createElement("li");
     const b = document.createElement("b");
-    const what = l.start ? "Mensen började" : l.type === "mens" ? "Mens" : "Symtom";
-    b.textContent = shortDate(fromISO(l.date)) + " · " + what;
+    b.textContent = shortDate(fromISO(l.date)) + " · " + logLabel(l);
     const span = document.createElement("span");
-    const details = [l.flow, l.symptoms.join(", "), l.note].filter(Boolean).join(" · ");
+    const details = logDetails(l);
     span.textContent = details || "Inga detaljer";
     li.append(b, span);
     historyList.append(li);
@@ -1682,9 +1729,9 @@ if (fullHistory) {
       p.logs.forEach((l) => {
         const d = fromISO(l.date);
         const li = el("li");
-        const what = l.start ? "Mensen började" : l.type === "mens" ? "Mens · dag " + (daysBetween(p.start, d) + 1) : "Symtom · cykeldag " + (daysBetween(p.start, d) + 1);
+        const what = l.start ? "Mensen började" : l.type === "mens" ? "Mens · dag " + (daysBetween(p.start, d) + 1) : logLabel(l) + " · cykeldag " + (daysBetween(p.start, d) + 1);
         li.append(el("b", null, shortDate(d) + " · " + what));
-        const details = [l.flow, (l.symptoms || []).join(", "), l.note].filter(Boolean).join(" · ");
+        const details = logDetails(l);
         if (details) li.append(el("span", null, details));
         ul.append(li);
       });
@@ -1699,8 +1746,8 @@ if (fullHistory) {
     const ul = el("ul", "period-logs");
     [...earlier].sort((a, b) => (a.date < b.date ? 1 : -1)).forEach((l) => {
       const li = el("li");
-      li.append(el("b", null, longDate(fromISO(l.date)) + " · " + (l.type === "mens" ? "Mens" : "Symtom")));
-      const details = [l.flow, (l.symptoms || []).join(", "), l.note].filter(Boolean).join(" · ");
+      li.append(el("b", null, longDate(fromISO(l.date)) + " · " + logLabel(l)));
+      const details = logDetails(l);
       if (details) li.append(el("span", null, details));
       ul.append(li);
     });
@@ -1756,7 +1803,8 @@ if (exportOpen && exportSheet) {
           typ: l.type,
           mensenBorjade: !!l.start,
           blodning: l.flow || null,
-          symtom: l.symptoms,
+          symtom: l.symptoms || [],
+          ...(l.type === "sex" ? { skydd: l.protection || null } : {}),
           anteckning: l.note || null,
         })),
       egnaSymtom: state.customSymptoms,
@@ -1821,9 +1869,9 @@ if (exportOpen && exportSheet) {
 
     const logRows = [...state.logs].sort((a, b) => (a.date < b.date ? 1 : -1)).map((l) => {
       const d = fromISO(l.date);
-      const type = l.start ? "Mensen började" : l.type === "mens" ? "Mens" : "Symtom";
+      const type = logLabel(l);
       return "<tr><td>" + esc(d ? date(d) : l.date) + "</td><td>" + esc(type) + "</td><td>" + esc(l.flow || "–") + "</td><td>" +
-        esc((l.symptoms || []).join(", ") || "–") + "</td><td>" + esc(l.note || "–") + "</td></tr>";
+        esc((l.symptoms || []).join(", ") || l.protection || "–") + "</td><td>" + esc(l.note || "–") + "</td></tr>";
     }).join("");
 
     const table = (head, rows, empty) => rows
@@ -1894,9 +1942,10 @@ const REWARDS = [
   { id: "lappbalsam", name: "Läppbalsam", desc: "Ett läppbalsam som skickas med ditt nästa paket." },
 ];
 function kronbladEarned() {
+  const welcome = 2; // välkomstgåva: alla konton börjar med två kronblad
   const orders = (state.orders || []).length;
   const answers = (state.feedback || []).length;
-  return orders + Math.min(answers, orders);
+  return welcome + orders + Math.min(answers, orders);
 }
 const kronblad = () => Math.max(0, kronbladEarned() - (state.rewards || []).length * KRONBLAD_GOAL);
 
@@ -1926,6 +1975,12 @@ if (flower) {
   flower.classList.toggle("full", full);
 
   setText("[data-kb-status]", shown + " av " + KRONBLAD_GOAL + " kronblad");
+  // Nya kronblad sedan förra besöket lyser till, och notisen på kronbladet nollställs
+  const unseen = kronbladUnseen();
+  [...flower.querySelectorAll(".petal.on")].slice(Math.max(0, shown - unseen)).forEach((p) => p.classList.add("new"));
+  const welcomeNote = document.querySelector("[data-kb-welcome]");
+  if (welcomeNote) welcomeNote.hidden = (state.kronbladSeen || 0) > 0;
+  if (unseen) { state.kronbladSeen = kronbladEarned(); saveState(); updateKronbladBadge(); }
   const left = KRONBLAD_GOAL - shown;
   setText("[data-kb-sub]", full ? "Blomman är full – välj en belöning nedan!" : (left === 1 ? "1 kronblad" : left + " kronblad") + " kvar till en belöning");
   const saved = document.querySelector("[data-kb-saved]");
@@ -2005,3 +2060,34 @@ if (flower) {
     });
   }
 }
+
+/* ---------- Notis på kronbladet: hur många nya kronblad man fått sedan man tittade senast ---------- */
+function kronbladUnseen() {
+  return Math.max(0, kronbladEarned() - (state.kronbladSeen || 0));
+}
+function updateKronbladBadge() {
+  const n = kronbladUnseen();
+  document.querySelectorAll(".kronblad-badge").forEach((a) => {
+    let dot = a.querySelector(".kb-notis");
+    if (!n) {
+      if (dot) dot.remove();
+      a.setAttribute("aria-label", "Kronblad – dina poäng");
+      return;
+    }
+    if (!dot) {
+      dot = document.createElement("b");
+      dot.className = "kb-notis";
+      dot.setAttribute("aria-hidden", "true");
+      a.append(dot);
+    }
+    const text = "+" + n;
+    if (dot.textContent && dot.textContent !== text) {
+      dot.classList.remove("pop");
+      void dot.offsetWidth; // starta om animationen
+    }
+    dot.textContent = text;
+    dot.classList.add("pop");
+    a.setAttribute("aria-label", "Kronblad – " + (n === 1 ? "1 nytt kronblad" : n + " nya kronblad"));
+  });
+}
+updateKronbladBadge();

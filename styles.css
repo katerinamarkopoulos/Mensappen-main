@@ -151,6 +151,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .btn-outline:hover { background: #ffe3e8; }
 
 .btn + .btn { margin-top: 16px; }
+.log-links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.log-links .btn + .btn { margin-top: 0; }
 
 /* ---------- Chips ---------- */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -561,6 +563,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .legend .l-ovu { width: 7px; height: 7px; background: var(--pink); margin: 0 3px; }
 .legend .l-today { border: 2px solid var(--ink); }
 .legend .l-sym { width: 7px; height: 7px; background: #f0a63c; margin: 0 3px; }
+.legend .l-sex { width: 10px; height: 9px; border-radius: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 9'%3E%3Cpath d='M5 8.6S.4 5.8.4 2.9C.4 1.5 1.4.4 2.7.4c1 0 1.7.6 2.3 1.4C5.6 1 6.3.4 7.3.4c1.3 0 2.3 1.1 2.3 2.5C9.6 5.8 5 8.6 5 8.6z' fill='%237b5cd6'/%3E%3C/svg%3E") center / contain no-repeat; margin: 0 1px; }
 
 .stats {
   display: grid;
@@ -847,6 +850,8 @@ span.day.predicted { color: var(--wine); }
   border-radius: 50%;
   background: #f0a63c;
 }
+/* Sex loggat: litet lila hjärta uppe till vänster */
+.day.has-sex { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 9'%3E%3Cpath d='M5 8.6S.4 5.8.4 2.9C.4 1.5 1.4.4 2.7.4c1 0 1.7.6 2.3 1.4C5.6 1 6.3.4 7.3.4c1.3 0 2.3 1.1 2.3 2.5C9.6 5.8 5 8.6 5 8.6z' fill='%237b5cd6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 4px 4px; background-size: 8px 7px; }
 .day.selected { box-shadow: 0 0 0 2.5px var(--pink); background: #ffd2e4; color: var(--wine); font-weight: 700; }
 .day.selected.period { background: var(--wine); color: #fff; box-shadow: 0 0 0 2.5px var(--pink), 0 0 0 4.5px #fff inset; }
 .day.selected::after { content: none; }
@@ -971,10 +976,34 @@ body.multi-mode .tabbar { visibility: hidden; }
 .flower.full .flower-center { fill: var(--wine); animation: bloom 1.6s ease-in-out .9s infinite; transform-box: fill-box; transform-origin: center; }
 @keyframes petal-in { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes bloom { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-@media (prefers-reduced-motion: reduce) { .flower .petal.on, .flower.full .flower-center { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .flower .petal.on, .flower .petal.on.new, .flower.full .flower-center, .kb-notis.pop { animation: none; } }
 .kb-status { font-size: 20px; font-weight: 700; color: var(--wine); margin: 10px 0 2px; }
 .kb-sub { font-size: 14px; margin: 0; }
 .kb-saved { font-size: 13px; color: var(--muted); margin: 4px 0 0; }
+.kb-welcome { font-size: 14px; color: var(--wine); font-weight: 600; margin: 10px 0 0; }
+/* Nya kronblad sedan förra besöket: vinröda och pulserar en gång */
+.flower .petal.on.new { fill: var(--wine); animation: petal-in .45s cubic-bezier(.3, 1.5, .5, 1) both, petal-glow 1.6s .6s ease-in-out 1; }
+@keyframes petal-glow { 50% { filter: drop-shadow(0 0 6px rgba(223, 98, 160, .9)); } }
+/* Notis på kronbladet uppe i hörnet */
+.kb-notis {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--wine);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 22px;
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--bg);
+}
+.kb-notis.pop { animation: kb-pop .5s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes kb-pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .flower .petal.on.new, .kb-notis.pop { animation: none; } }
 .kb-how p { font-size: 14px; line-height: 1.45; margin: 0; }
 .kb-rules { list-style: none; margin: 0 0 8px; padding: 0; font-size: 14px; line-height: 1.5; }
 .kb-rules b { display: inline-block; min-width: 28px; color: var(--wine); }

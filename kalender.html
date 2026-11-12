@@ -43,6 +43,7 @@
         <span><i class="l-ovu"></i>Ägglossning</span>
         <span><i class="l-today"></i>Idag</span>
         <span><i class="l-sym"></i>Symtom</span>
+        <span><i class="l-sex"></i>Sex</span>
       </div>
 
       <div class="stats">
@@ -107,6 +108,18 @@
 
         <p class="label">Symtom</p>
         <div class="chips" role="group" aria-label="Symtom" data-day-symptoms></div>
+
+        <div class="switch-row day-switch">
+          <label for="day-sex">Sex den här dagen</label>
+          <span class="switch"><input id="day-sex" type="checkbox" role="switch" data-day-sex><span></span></span>
+        </div>
+        <div data-day-protection-section hidden>
+          <p class="label">Skydd</p>
+          <div class="chips" data-single role="group" aria-label="Skydd" data-day-protection>
+            <button type="button" class="chip" aria-pressed="false">Med skydd</button>
+            <button type="button" class="chip" aria-pressed="false">Utan skydd</button>
+          </div>
+        </div>
 
         <button type="button" class="btn btn-primary" data-day-save>Spara</button>
         <a class="link wine day-more" href="logga.html" data-day-more>Lägg till anteckning eller eget symtom</a>
