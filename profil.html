@@ -2,35 +2,125 @@
 <html lang="sv">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mensappen – Profil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Blomstra – Profil</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
 </head>
 <body>
   <div class="phone">
-    <div class="status">9:41</div>
-
     <main class="screen">
+      <a class="kronblad-badge" href="kronblad.html" aria-label="Kronblad – dina poäng">
+        <svg class="lotus" viewBox="0 0 40 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 28C12.5 22.5 12.5 11.5 20 4c7.5 7.5 7.5 18.5 0 24z"/><path d="M20 28C10 28 4 22 4 10c4.5 1 8 2.8 10.6 5.8"/><path d="M20 28c10 0 16-6 16-18-4.5 1-8 2.8-10.6 5.8"/></svg>
+        <span>Kronblad</span>
+      </a>
       <div class="profile-head">
-        <div class="avatar" aria-hidden="true">F</div>
+        <div class="avatar" aria-hidden="true" data-user-initial>F</div>
         <div>
-          <h1 class="h1">Fina</h1>
-          <p>Medlem sedan mars 2026</p>
+          <h1 class="h1" data-user-fullname>Fina</h1>
+          <p data-member-since>Medlem sedan november 2026</p>
+        </div>
+      </div>
+
+      <p class="label wine">Konto</p>
+      <div class="list">
+        <button type="button" class="row" data-edit="name" aria-expanded="false" aria-controls="edit-name">Namn <span class="value"><span data-user-fullname>Fina</span> <svg class="chev" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></button>
+        <div class="editor" id="edit-name" data-editor="name" hidden>
+          <label class="sr-only" for="name-input">Namn</label>
+          <input class="input" id="name-input" type="text" autocomplete="given-name" maxlength="40">
+          <div class="editor-actions">
+            <button type="button" class="btn btn-primary" data-editor-save>Spara</button>
+          </div>
+        </div>
+        <div class="row">E-post <span class="value" data-user-email></span></div>
+      </div>
+
+      <p class="label wine">Om dig</p>
+      <div class="list">
+        <button type="button" class="row" data-edit="age" aria-expanded="false" aria-controls="edit-age">Ålder <span class="value"><span data-profile-value="age">Lägg till</span> <svg class="chev" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></button>
+        <div class="editor" id="edit-age" data-editor="age" hidden>
+          <label class="sr-only" for="age-select">Ålder</label>
+          <select class="input" id="age-select" data-age-select><option value="">Vill inte ange</option></select>
+          <div class="editor-actions">
+            <button type="button" class="btn btn-primary" data-editor-save>Spara</button>
+          </div>
+        </div>
+        <button type="button" class="row" data-edit="contraception" aria-expanded="false" aria-controls="edit-contraception">Preventivmedel <span class="value"><span data-profile-value="contraception">Lägg till</span> <svg class="chev" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></button>
+        <div class="editor" id="edit-contraception" data-editor="contraception" hidden>
+          <fieldset class="list choice-list" data-contraception-options="profile-contraception">
+            <legend class="sr-only">Preventivmedel</legend>
+          </fieldset>
+          <p class="note">Hormonella preventivmedel kan göra att ägglossningen uteblir. Då stämmer appens uppskattningar sämre.</p>
+          <div class="editor-actions">
+            <button type="button" class="btn btn-primary" data-editor-save>Spara</button>
+          </div>
+        </div>
+        <button type="button" class="row" data-edit="protection" aria-expanded="false" aria-controls="edit-protection">Mensskydd <span class="value"><span data-profile-value="protection">Lägg till</span> <svg class="chev" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></button>
+        <div class="editor" id="edit-protection" data-editor="protection" hidden>
+          <p>Välj allt du brukar använda.</p>
+          <div class="chips" data-protection-options aria-label="Mensskydd"></div>
+          <div class="editor-actions">
+            <button type="button" class="btn btn-primary" data-editor-save>Spara</button>
+          </div>
         </div>
       </div>
 
       <p class="label wine">Min cykel</p>
       <div class="list">
-        <a class="row" href="kalender.html">Cykellängd <span class="value">28 dagar <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
-        <a class="row" href="kalender.html">Menslängd <span class="value">5 dagar <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+        <button type="button" class="row" data-edit="cycle" aria-expanded="false" aria-controls="edit-cycle"><span>Cykellängd<small class="source" data-cycle-source>Räknas från dina loggar</small></span> <span class="value"><span data-cycle-length-value>28 dagar</span> <svg class="chev" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></button>
+        <div class="editor" id="edit-cycle" data-editor="cycle" data-min="21" data-max="45" hidden>
+          <p>Antal dagar från en mensstart till nästa.</p>
+          <div class="stepper big">
+            <button type="button" data-step="-1" aria-label="Minska cykellängd">−</button>
+            <output aria-live="polite">28</output><span>dagar</span>
+            <button type="button" data-step="1" aria-label="Öka cykellängd">+</button>
+          </div>
+          <div class="editor-actions">
+            <button type="button" class="btn btn-primary" data-editor-save>Spara</button>
+            <button type="button" class="link wine" data-editor-auto>Beräkna från mina loggar</button>
+          </div>
+        </div>
+        <button type="button" class="row" data-edit="period" aria-expanded="false" aria-controls="edit-period"><span>Menslängd<small class="source" data-period-source>Räknas från dina loggar</small></span> <span class="value"><span data-period-length-value>5 dagar</span> <svg class="chev" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></button>
+        <div class="editor" id="edit-period" data-editor="period" data-min="2" data-max="10" hidden>
+          <p>Hur många dagar din mens brukar vara.</p>
+          <div class="stepper big">
+            <button type="button" data-step="-1" aria-label="Minska menslängd">−</button>
+            <output aria-live="polite">5</output><span>dagar</span>
+            <button type="button" data-step="1" aria-label="Öka menslängd">+</button>
+          </div>
+          <div class="editor-actions">
+            <button type="button" class="btn btn-primary" data-editor-save>Spara</button>
+            <button type="button" class="link wine" data-editor-auto>Låt appen räkna från mina loggar</button>
+          </div>
+        </div>
         <a class="row" href="logga.html">Logga mens eller symtom <span class="value"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
       </div>
 
       <p class="label wine">Leverans</p>
       <div class="list">
-        <a class="row" href="paket.html">Ditt paket <span class="value">149 kr <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
-        <a class="row" href="paket.html">När vi frågar <span class="value">Inför varje mens <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
-        <a class="row" href="#">Leveransadress <span class="value">Storgatan 1 <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+        <a class="row" href="paket.html">Ditt paket <span class="value"><span data-package-total>60 kr</span> <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+        <a class="row" href="paket.html">När vi frågar <span class="value"><span data-when-label>Inför varje mens</span> <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
+        <button type="button" class="row" data-edit="address" aria-expanded="false" aria-controls="edit-address">Leveransadress <span class="value"><span data-address-short>Lägg till</span> <svg class="chev" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></button>
+        <form class="editor form address-form" id="edit-address" data-editor="address" novalidate hidden>
+          <div class="field">
+            <label for="profile-street">Gatuadress</label>
+            <input class="input" id="profile-street" name="street" type="text" autocomplete="street-address" required>
+          </div>
+          <div class="field-pair">
+            <div class="field">
+              <label for="profile-zip">Postnummer</label>
+              <input class="input" id="profile-zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="6" required>
+            </div>
+            <div class="field">
+              <label for="profile-city">Ort</label>
+              <input class="input" id="profile-city" name="city" type="text" autocomplete="address-level2" required>
+            </div>
+          </div>
+          <p class="error" data-form-error role="alert"></p>
+          <div class="editor-actions">
+            <button type="submit" class="btn btn-primary" data-editor-save>Spara</button>
+          </div>
+        </form>
         <a class="row" href="rackte.html">Räckte senaste paketet? <span class="value">Svara <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
       </div>
 
@@ -38,27 +128,78 @@
       <div class="list">
         <div class="row">
           <label for="r1">Inför mensen</label>
-          <span class="switch"><input id="r1" type="checkbox" role="switch" checked><span></span></span>
+          <span class="switch"><input id="r1" type="checkbox" role="switch" data-pref="periodReminder" checked><span></span></span>
         </div>
         <div class="row">
           <label for="r2">Koka menskoppen</label>
-          <span class="switch"><input id="r2" type="checkbox" role="switch" checked><span></span></span>
+          <span class="switch"><input id="r2" type="checkbox" role="switch" data-pref="cupReminder" checked><span></span></span>
         </div>
         <div class="row">
           <label for="r3">Logga symtom</label>
-          <span class="switch"><input id="r3" type="checkbox" role="switch"><span></span></span>
+          <span class="switch"><input id="r3" type="checkbox" role="switch" data-pref="symptomReminder"><span></span></span>
         </div>
       </div>
 
       <p class="label wine">Integritet</p>
       <div class="list">
-        <a class="row" href="#">Exportera mina data <span class="value"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></a>
-        <a class="row danger" href="#">Radera konto</a>
+        <button type="button" class="row" data-export-open aria-haspopup="dialog" aria-controls="export-sheet">Exportera mina data <span class="value"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg></span></button>
+        <button type="button" class="row danger" data-reset>Radera mina data</button>
       </div>
       <p class="fineprint">Din cykeldata används bara för att anpassa appen och ditt paket – aldrig för reklam.</p>
 
-      <a class="link wine logout" href="index.html">Logga ut</a>
+      <a class="link wine logout" href="valkommen.html" data-logout>Logga ut</a>
     </main>
+
+    <div class="sheet" id="export-sheet" role="dialog" aria-modal="true" aria-labelledby="export-title" hidden>
+      <div class="sheet-backdrop" data-sheet-close></div>
+      <div class="sheet-inner" tabindex="-1">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <button type="button" class="sheet-close" data-sheet-close aria-label="Stäng">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg>
+        </button>
+
+        <div data-export-step="ask">
+          <h2 class="sheet-title" id="export-title" tabindex="-1">Vill du exportera dina data?</h2>
+          <fieldset class="export-formats">
+            <legend class="sheet-lead">Välj vilken sorts fil du vill spara:</legend>
+            <label class="export-format">
+              <input type="radio" name="export-format" value="rapport" checked>
+              <span><b>Lättläst rapport</b><small>En sida att läsa, skriva ut eller visa för t.ex. en barnmorska. Utan namn, e-post och adress.</small></span>
+            </label>
+            <label class="export-format">
+              <input type="radio" name="export-format" value="json">
+              <span><b>Datafil (JSON)</b><small>Dina loggningar och inställningar, för att flytta till en annan app. Utan namn, e-post och adress.</small></span>
+            </label>
+          </fieldset>
+          <p class="export-includes">Filen innehåller:</p>
+          <ul class="export-list" data-export-for="rapport">
+            <li>Ålder, preventivmedel och mensskydd</li>
+            <li>Cykellängd, menslängd och nästa beräknade mens</li>
+            <li>Alla mensperioder – hur länge de varade och cykellängd</li>
+            <li><span data-export-count-logs>0 loggningar</span> – blödning, symtom och anteckningar</li>
+          </ul>
+          <ul class="export-list" data-export-for="json" hidden>
+            <li><span data-export-count-logs>0 loggningar</span> – mens, symtom och anteckningar</li>
+            <li>Ålder, preventivmedel och mensskydd</li>
+            <li>Cykellängd och menslängd</li>
+            <li>Ditt paket och beställningar (utan adress)</li>
+          </ul>
+          <p class="export-warning">Filen är inte lösenordsskyddad. Tänk på var du sparar den och vem du delar den med.</p>
+          <button type="button" class="btn btn-primary" data-export-yes>Ja, exportera</button>
+          <button type="button" class="btn btn-outline" data-sheet-close>Nej</button>
+        </div>
+
+        <div class="order-done" data-export-step="done" hidden>
+          <div class="done-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25l7 7 13-15"/></svg>
+          </div>
+          <h2 class="sheet-title" tabindex="-1">Dina data är exporterade</h2>
+          <p class="sheet-lead" role="status">Filen <b data-export-filename></b> har sparats bland dina nedladdningar.</p>
+          <p class="sheet-lead" data-export-tip hidden>Öppna den i webbläsaren för att läsa den, skriva ut den eller spara den som PDF.</p>
+          <button type="button" class="btn btn-primary" data-sheet-close>Klar</button>
+        </div>
+      </div>
+    </div>
 
     <nav class="tabbar" aria-label="Huvudmeny">
       <a class="tab" href="index.html">
@@ -79,5 +220,6 @@
       </a>
     </nav>
   </div>
+  <script src="app.js"></script>
 </body>
 </html>

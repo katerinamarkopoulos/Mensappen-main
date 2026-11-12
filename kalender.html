@@ -2,17 +2,23 @@
 <html lang="sv">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mensappen – Kalender</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Blomstra – Kalender</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
 </head>
 <body>
   <div class="phone">
-    <div class="status">9:41</div>
-
     <main class="screen">
+      <a class="kronblad-badge" href="kronblad.html" aria-label="Kronblad – dina poäng">
+        <svg class="lotus" viewBox="0 0 40 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 28C12.5 22.5 12.5 11.5 20 4c7.5 7.5 7.5 18.5 0 24z"/><path d="M20 28C10 28 4 22 4 10c4.5 1 8 2.8 10.6 5.8"/><path d="M20 28c10 0 16-6 16-18-4.5 1-8 2.8-10.6 5.8"/></svg>
+        <span>Kronblad</span>
+      </a>
       <h1 class="h1">Kalender</h1>
-      <p class="lead small" style="font-size:15px;margin-top:6px">Tryck på en dag för att logga.</p>
+      <div class="cal-tools">
+        <p class="cal-hint" data-cal-hint aria-live="polite">Tryck på en dag för att logga.</p>
+        <button type="button" class="pill-link" data-multi-toggle aria-pressed="false">Välj flera dagar</button>
+      </div>
 
       <div class="month-nav">
         <button type="button" data-month="-1" aria-label="Föregående månad">
@@ -33,23 +39,79 @@
 
       <div class="legend">
         <span><i class="l-period"></i>Mens</span>
-        <span><i class="l-pred"></i>Beräknad mens</span>
+        <span><i class="l-pred"></i>Beräknad / ej loggad mens</span>
         <span><i class="l-ovu"></i>Ägglossning</span>
         <span><i class="l-today"></i>Idag</span>
+        <span><i class="l-sym"></i>Symtom</span>
       </div>
 
       <div class="stats">
-        <div class="card stat"><small>Snittcykel</small><strong>28 dagar</strong></div>
-        <div class="card stat"><small>Mensen varar</small><strong>ca 5 dagar</strong></div>
+        <div class="card stat"><small>Snittcykel</small><strong data-cycle-length-value>28 dagar</strong></div>
+        <div class="card stat"><small>Mensen varar</small><strong>ca <span data-period-length-value>5 dagar</span></strong></div>
       </div>
 
-      <p class="label wine">Senast loggat</p>
-      <ul class="list history">
+      <div class="label-row">
+        <p class="label wine">Senast loggat</p>
+        <a class="pill-link" href="historik.html">Visa all historik
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg>
+        </a>
+      </div>
+      <ul class="list history" data-history>
         <li><b>29 okt · Mensen började</b><span>Medel · Mensvärk, Trötthet</span></li>
         <li><b>1 okt · Mensen började</b><span>Riklig · Mensvärk, Huvudvärk</span></li>
         <li><b>3 sep · Mensen började</b><span>Medel · Humör</span></li>
       </ul>
     </main>
+
+    <!-- Flera dagar: åtgärdsrad -->
+    <div class="multi-bar" data-multi-bar role="region" aria-label="Valda dagar" hidden>
+      <div class="multi-top">
+        <strong data-multi-count aria-live="polite">Inga dagar valda</strong>
+        <button type="button" class="link wine" data-multi-cancel>Avbryt</button>
+      </div>
+      <div class="chips" data-single role="group" aria-label="Blödning (valfritt)" data-multi-flow>
+        <button type="button" class="chip" aria-pressed="false">Lätt</button>
+            <button type="button" class="chip" aria-pressed="false">Medel</button>
+            <button type="button" class="chip" aria-pressed="false">Riklig</button>
+      </div>
+      <div class="multi-actions">
+        <button type="button" class="btn btn-primary" data-multi-save disabled>Logga som mens</button>
+        <button type="button" class="btn btn-outline" data-multi-remove hidden>Ta bort mens</button>
+      </div>
+    </div>
+
+    <!-- En dag: snabbloggning -->
+    <div class="sheet" id="day-sheet" role="dialog" aria-modal="true" aria-labelledby="day-title" hidden>
+      <div class="sheet-backdrop" data-sheet-close></div>
+      <div class="sheet-inner" tabindex="-1">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <button type="button" class="sheet-close" data-sheet-close aria-label="Stäng">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg>
+        </button>
+        <p class="sheet-range" data-day-sub>Cykeldag 5</p>
+        <h2 class="sheet-title" id="day-title" data-day-title>Tisdag 3 november</h2>
+
+        <div class="switch-row day-switch">
+          <label for="day-mens">Mens den här dagen</label>
+          <span class="switch"><input id="day-mens" type="checkbox" role="switch" data-day-mens><span></span></span>
+        </div>
+
+        <div data-day-flow-section>
+          <p class="label">Blödning</p>
+          <div class="chips" data-single role="group" aria-label="Blödning" data-day-flow>
+            <button type="button" class="chip" aria-pressed="false">Lätt</button>
+            <button type="button" class="chip" aria-pressed="false">Medel</button>
+            <button type="button" class="chip" aria-pressed="false">Riklig</button>
+          </div>
+        </div>
+
+        <p class="label">Symtom</p>
+        <div class="chips" role="group" aria-label="Symtom" data-day-symptoms></div>
+
+        <button type="button" class="btn btn-primary" data-day-save>Spara</button>
+        <a class="link wine day-more" href="logga.html" data-day-more>Lägg till anteckning eller eget symtom</a>
+      </div>
+    </div>
 
     <nav class="tabbar" aria-label="Huvudmeny">
       <a class="tab" href="index.html">

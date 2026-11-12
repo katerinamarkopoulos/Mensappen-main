@@ -2,40 +2,72 @@
 <html lang="sv">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mensappen – Översikt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Blomstra – Översikt</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
 </head>
 <body>
   <div class="phone">
-    <div class="status">9:41</div>
-
     <main class="screen">
-      <h1 class="h1">Hej Fina!
+      <a class="kronblad-badge" href="kronblad.html" aria-label="Kronblad – dina poäng">
+        <svg class="lotus" viewBox="0 0 40 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 28C12.5 22.5 12.5 11.5 20 4c7.5 7.5 7.5 18.5 0 24z"/><path d="M20 28C10 28 4 22 4 10c4.5 1 8 2.8 10.6 5.8"/><path d="M20 28c10 0 16-6 16-18-4.5 1-8 2.8-10.6 5.8"/></svg>
+        <span>Kronblad</span>
+      </a>
+      <h1 class="h1"><span data-user-name>Hej!</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 8 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.6 3.5 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>
       </h1>
-      <p class="date">Måndag 9 november</p>
+      <p class="date" data-today>Måndag 9 november</p>
 
-      <p class="phase">Du är nu i follikulärfasen</p>
+      <button type="button" class="phase" data-phase-open aria-haspopup="dialog" aria-controls="phase-sheet">
+        Du är nu i <span data-phase>follikulärfasen</span>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10" cy="10" r="8.2"/><path d="M10 9v5"/><circle cx="10" cy="6.2" r=".6" fill="currentColor"/></svg>
+      </button>
 
       <section class="card cycle" aria-label="Din cykel">
         <div class="ring">
-          <strong>Dag 12</strong>
-          <small>av ca 28</small>
+          <svg data-ring viewBox="0 0 200 200" tabindex="0" role="slider" aria-label="Cykeldagar" aria-valuemin="1" aria-valuemax="28" aria-valuenow="12"></svg>
+          <div class="ring-text" aria-hidden="true">
+            <strong data-cycle-day>Dag 12</strong>
+            <small data-cycle-length>av ca 28</small>
+            <small class="ring-phase" data-ring-phase hidden></small>
+          </div>
         </div>
-        <p>Mens om ca 5 dagar</p>
+        <p>Mens om ca <span data-days-to-period>17 dagar</span></p>
+        <p class="ovu-note"><span class="dot" aria-hidden="true"></span><span data-ovulation-text>Ägglossning om ca 2 dagar (11 nov)</span></p>
+        <p class="hint" data-hormonal-note hidden>Med hormonellt preventivmedel kan ägglossningen utebli.</p>
+        <p class="hint" data-no-logs hidden>Det här är en uppskattning. Logga när din mens börjar så räknar appen fram din cykel.</p>
       </section>
 
-      <a class="btn btn-primary" href="logga.html">Mensen kom idag</a>
-      <a class="btn btn-outline" href="logga.html">Logga symtom</a>
+      <a class="btn btn-primary" href="logga.html?typ=mens">Mensen kom idag</a>
+      <a class="btn btn-outline" href="logga.html?typ=symtom">Logga symtom</a>
 
       <section class="card delivery" aria-label="Leverans">
         <p class="eyebrow">LEVERANS</p>
-        <h2>Vi frågar dig inför nästa mens</h2>
-        <p class="meta">Ungefär 11 nov · Inget skickas utan ditt ja</p>
-        <a class="link" href="paket.html">Ändra paket</a>
+        <h2 data-delivery-title>Vi frågar dig inför nästa mens</h2>
+        <p class="meta" data-delivery-meta>Ungefär <span data-ask-date>23 nov</span> · Inget skickas utan ditt ja</p>
+        <div class="delivery-actions">
+          <button type="button" class="btn btn-primary small-btn" data-resume hidden>Återuppta leveranser</button>
+          <a class="link" href="paket.html">Ändra paket</a>
+        </div>
       </section>
     </main>
+
+    <div class="sheet" id="phase-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
+      <div class="sheet-backdrop" data-sheet-close></div>
+      <div class="sheet-inner" tabindex="-1">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <button type="button" class="sheet-close" data-sheet-close aria-label="Stäng">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg>
+        </button>
+        <p class="sheet-range" data-sheet-range>Dag 6–12</p>
+        <h2 class="sheet-title" id="sheet-title" data-sheet-title>Follikulärfasen</h2>
+        <p class="sheet-lead" data-sheet-lead></p>
+        <div data-sheet-body></div>
+        <a class="btn btn-primary" href="faser.html" data-sheet-more>Läs mer om cykelns faser</a>
+        <p class="fineprint">Alla cykler är olika – dagarna är uppskattningar utifrån din cykel.</p>
+      </div>
+    </div>
 
     <nav class="tabbar" aria-label="Huvudmeny">
       <a class="tab" href="index.html" aria-current="page">
@@ -56,5 +88,6 @@
       </a>
     </nav>
   </div>
+  <script src="app.js"></script>
 </body>
 </html>

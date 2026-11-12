@@ -2,15 +2,18 @@
 <html lang="sv">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mensappen – Räckte ditt paket?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Blomstra – Räckte ditt paket?</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
 </head>
 <body>
   <div class="phone">
-    <div class="status">9:41</div>
-
     <main class="screen feedback">
+      <a class="kronblad-badge" href="kronblad.html" aria-label="Kronblad – dina poäng">
+        <svg class="lotus" viewBox="0 0 40 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 28C12.5 22.5 12.5 11.5 20 4c7.5 7.5 7.5 18.5 0 24z"/><path d="M20 28C10 28 4 22 4 10c4.5 1 8 2.8 10.6 5.8"/><path d="M20 28c10 0 16-6 16-18-4.5 1-8 2.8-10.6 5.8"/></svg>
+        <span>Kronblad</span>
+      </a>
       <a class="back" href="index.html">
         <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg>
         Stäng
@@ -35,7 +38,7 @@
         <p>Koka den i 10 minuter efter mensen och låt den torka.</p>
         <div class="switch-row">
           <label for="remind">Påminn mig varje månad</label>
-          <span class="switch"><input id="remind" type="checkbox" role="switch" checked><span></span></span>
+          <span class="switch"><input id="remind" type="checkbox" role="switch" data-pref="cupReminder" checked><span></span></span>
         </div>
       </section>
 

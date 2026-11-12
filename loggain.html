@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="sv" data-public>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Blomstra – Logga in</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
+</head>
+<body>
+  <div class="phone">
+    <main class="screen auth">
+      <a class="back" href="valkommen.html">← Tillbaka</a>
+      <h1 class="h1">Logga in</h1>
+      <p class="lead">Välkommen tillbaka!</p>
+
+      <form class="form" data-login-form novalidate>
+        <div class="field">
+          <label for="login-email">E-post</label>
+          <input class="input" id="login-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="login-password">Lösenord</label>
+          <div class="password">
+            <input class="input" id="login-password" name="password" type="password" autocomplete="current-password" required>
+            <button type="button" class="pw-toggle" data-pw-toggle aria-controls="login-password" aria-pressed="false">Visa</button>
+          </div>
+        </div>
+        <p class="error" data-form-error role="alert"></p>
+        <button type="submit" class="btn btn-primary">Logga in</button>
+      </form>
+      <p class="switch-link">Inget konto än? <a class="link wine" href="registrera.html">Skapa konto</a></p>
+    </main>
+  </div>
+  <script src="onboarding.js"></script>
+</body>
+</html>

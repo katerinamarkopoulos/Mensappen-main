@@ -2,48 +2,78 @@
 <html lang="sv">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mensappen – Logga din mens</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Blomstra – Logga din mens</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
 </head>
 <body>
   <div class="phone">
-    <div class="status">9:41</div>
-
     <main class="screen log">
+      <a class="kronblad-badge" href="kronblad.html" aria-label="Kronblad – dina poäng">
+        <svg class="lotus" viewBox="0 0 40 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 28C12.5 22.5 12.5 11.5 20 4c7.5 7.5 7.5 18.5 0 24z"/><path d="M20 28C10 28 4 22 4 10c4.5 1 8 2.8 10.6 5.8"/><path d="M20 28c10 0 16-6 16-18-4.5 1-8 2.8-10.6 5.8"/></svg>
+        <span>Kronblad</span>
+      </a>
       <a class="back" href="index.html">← Tillbaka</a>
-      <h1 class="h1">Logga din mens</h1>
+      <h1 class="h1" data-log-title>Logga din mens</h1>
 
       <p class="label">Datum</p>
       <div class="chips" data-single role="group" aria-label="Datum">
-        <button type="button" class="chip" aria-pressed="true">Idag 9 nov</button>
-        <button type="button" class="chip" aria-pressed="false">Igår</button>
-        <button type="button" class="chip" aria-pressed="false">Välj datum</button>
+        <button type="button" class="chip" aria-pressed="true" data-date-offset="0">Idag <span data-today-short>9 nov</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-date-offset="-1">Igår</button>
+        <button type="button" class="chip" aria-pressed="false" data-action="pick-date" aria-expanded="false" aria-controls="date-picker">Välj datum</button>
       </div>
 
+      <div class="card picker" id="date-picker" hidden>
+        <p class="picker-title">När startade mensen?</p>
+        <div class="month-nav">
+          <button type="button" data-picker-month="-1" aria-label="Föregående månad">
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2L4 7l5 5"/></svg>
+          </button>
+          <h2 data-picker-title aria-live="polite">november 2026</h2>
+          <button type="button" data-picker-month="1" aria-label="Nästa månad">
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2l5 5-5 5"/></svg>
+          </button>
+        </div>
+        <div class="cal-head" aria-hidden="true">
+          <span>MÅ</span><span>TI</span><span>ON</span><span>TO</span><span>FR</span><span>LÖ</span><span>SÖ</span>
+        </div>
+        <div class="cal-grid" data-picker-grid></div>
+      </div>
+
+      <div data-flow-section>
       <p class="label">Blödning</p>
-      <div class="chips" data-single role="group" aria-label="Blödning">
+      <div class="chips" data-single role="group" aria-label="Blödning" data-flow>
         <button type="button" class="chip" aria-pressed="false">Lätt</button>
         <button type="button" class="chip" aria-pressed="true">Medel</button>
         <button type="button" class="chip" aria-pressed="false">Riklig</button>
       </div>
+      </div>
 
       <p class="label">Symtom (valfritt)</p>
-      <div class="chips" role="group" aria-label="Symtom">
+      <div class="chips" role="group" aria-label="Symtom" data-symptoms>
         <button type="button" class="chip" aria-pressed="true">Mensvärk</button>
         <button type="button" class="chip" aria-pressed="false">Huvudvärk</button>
         <button type="button" class="chip" aria-pressed="false">Trötthet</button>
         <button type="button" class="chip" aria-pressed="false">Humör</button>
         <button type="button" class="chip" aria-pressed="false">Värmevallning</button>
         <button type="button" class="chip" aria-pressed="false">Sömn</button>
-        <button type="button" class="chip" data-action="add-symptom">+ Lägg till</button>
+        <button type="button" class="chip" data-action="add-symptom" aria-expanded="false" aria-controls="add-symptom">+ Lägg till</button>
       </div>
+
+      <form class="add-form" id="add-symptom" hidden>
+        <label class="sr-only" for="symptom-input">Nytt symtom</label>
+        <input id="symptom-input" class="input" type="text" maxlength="30" placeholder="Skriv ett symtom, t.ex. Illamående" autocomplete="off">
+        <button type="submit" class="btn btn-primary">Lägg till</button>
+        <button type="button" class="link wine" data-cancel>Avbryt</button>
+      </form>
 
       <label class="label" for="note">Anteckning</label>
       <textarea id="note" class="textarea" placeholder="Skriv något…"></textarea>
 
       <div class="actions">
-        <a class="btn btn-primary" href="index.html">Spara</a>
+        <button type="button" class="btn btn-primary" data-save-log>Spara</button>
+        <p class="thanks" data-log-status role="status"></p>
       </div>
     </main>
 

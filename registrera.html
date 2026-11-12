@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="sv" data-public>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Blomstra – Skapa konto</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
+</head>
+<body>
+  <div class="phone">
+    <main class="screen auth onboard">
+      <div class="onboard-top">
+        <a class="back" href="valkommen.html" data-ob-back>← Tillbaka</a>
+        <button type="button" class="link wine" data-ob-skip-all hidden>Hoppa över alla</button>
+      </div>
+      <div class="progress" data-ob-progress hidden><span></span></div>
+
+      <!-- 1. Konto -->
+      <section data-ob-step="account" aria-labelledby="t-account">
+        <h1 class="h1" id="t-account">Skapa konto</h1>
+        <p class="lead">Det tar bara en minut.</p>
+        <form class="form" data-register-form novalidate>
+          <div class="field">
+            <label for="reg-name">Förnamn</label>
+            <input class="input" id="reg-name" name="name" type="text" autocomplete="given-name" maxlength="40" required>
+          </div>
+          <div class="field">
+            <label for="reg-email">E-post</label>
+            <input class="input" id="reg-email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="reg-password">Lösenord</label>
+            <div class="password">
+              <input class="input" id="reg-password" name="password" type="password" autocomplete="new-password" minlength="8" required aria-describedby="pw-hint">
+              <button type="button" class="pw-toggle" data-pw-toggle aria-controls="reg-password" aria-pressed="false">Visa</button>
+            </div>
+            <small id="pw-hint">Minst 8 tecken</small>
+          </div>
+          <p class="error" data-form-error role="alert"></p>
+          <button type="submit" class="btn btn-primary">Skapa konto</button>
+        </form>
+        <p class="switch-link">Har du redan ett konto? <a class="link wine" href="loggain.html">Logga in</a></p>
+      </section>
+
+      <!-- 2. Intro till frågorna -->
+      <section data-ob-step="intro" aria-labelledby="t-intro" hidden>
+        <h1 class="h1" id="t-intro">Välkommen, <span data-ob-name></span>!</h1>
+        <p class="lead">Vill du svara på några frågor om dig och din cykel? Då blir appen mer träffsäker från start.</p>
+        <ul class="ob-list">
+          <li>Ålder</li>
+          <li>Cykellängd och hur länge mensen varar</li>
+          <li>När din senaste mens började</li>
+          <li>Preventivmedel och mensskydd</li>
+        </ul>
+        <div class="ob-actions">
+          <button type="button" class="btn btn-primary" data-ob-next>Svara på frågorna</button>
+          <button type="button" class="btn btn-outline" data-ob-finish>Hoppa över – låt appen räkna själv</button>
+        </div>
+        <p class="fineprint">Du kan alltid fylla i eller ändra svaren senare under Profil.</p>
+      </section>
+
+      <!-- 3. Ålder -->
+      <section data-ob-step="age" data-question aria-labelledby="t-age" hidden>
+        <h1 class="h1" id="t-age">Hur gammal är du?</h1>
+        <p class="lead">Cykeln förändras genom livet, till exempel i tonåren och inför klimakteriet.</p>
+        <label class="sr-only" for="ob-age">Ålder</label>
+        <select class="input ob-input" id="ob-age" data-age-select><option value="">Välj ålder</option></select>
+        <div class="ob-actions">
+          <button type="button" class="btn btn-primary" data-ob-next>Nästa</button>
+          <button type="button" class="link wine" data-ob-skip>Hoppa över</button>
+        </div>
+      </section>
+
+      <!-- 4. Cykellängd -->
+      <section data-ob-step="cycle" data-question aria-labelledby="t-cycle" hidden>
+        <h1 class="h1" id="t-cycle">Hur lång är din cykel i snitt?</h1>
+        <p class="lead">Räkna från första mensdagen till dagen innan nästa mens. 28 dagar är vanligt, men allt mellan 21 och 35 är normalt.</p>
+        <div class="stepper big ob-stepper" data-min="21" data-max="45">
+          <button type="button" data-step="-1" aria-label="Minska cykellängd">−</button>
+          <output aria-live="polite">28</output><span>dagar</span>
+          <button type="button" data-step="1" aria-label="Öka cykellängd">+</button>
+        </div>
+        <div class="ob-actions">
+          <button type="button" class="btn btn-primary" data-ob-next>Nästa</button>
+          <button type="button" class="link wine" data-ob-skip>Vet inte – låt appen räkna</button>
+        </div>
+      </section>
+
+      <!-- 5. Menslängd -->
+      <section data-ob-step="period" data-question aria-labelledby="t-period" hidden>
+        <h1 class="h1" id="t-period">Hur många dagar brukar du ha mens?</h1>
+        <p class="lead">Det vanliga är 3–7 dagar.</p>
+        <div class="stepper big ob-stepper" data-min="2" data-max="10">
+          <button type="button" data-step="-1" aria-label="Minska menslängd">−</button>
+          <output aria-live="polite">5</output><span>dagar</span>
+          <button type="button" data-step="1" aria-label="Öka menslängd">+</button>
+        </div>
+        <div class="ob-actions">
+          <button type="button" class="btn btn-primary" data-ob-next>Nästa</button>
+          <button type="button" class="link wine" data-ob-skip>Vet inte – låt appen räkna</button>
+        </div>
+      </section>
+
+      <!-- 6. Senaste mens -->
+      <section data-ob-step="last" data-question aria-labelledby="t-last" hidden>
+        <h1 class="h1" id="t-last">När började din senaste mens?</h1>
+        <p class="lead">Då vet appen var i cykeln du är just nu.</p>
+        <label class="sr-only" for="ob-last">Första dagen på senaste mensen</label>
+        <input class="input ob-input" id="ob-last" type="date" data-last-date>
+        <div class="ob-actions">
+          <button type="button" class="btn btn-primary" data-ob-next>Nästa</button>
+          <button type="button" class="link wine" data-ob-skip>Minns inte</button>
+        </div>
+      </section>
+
+      <!-- 7. Preventivmedel -->
+      <section data-ob-step="contraception" data-question aria-labelledby="t-contra" hidden>
+        <h1 class="h1" id="t-contra">Använder du preventivmedel?</h1>
+        <p class="lead">Hormonella preventivmedel kan göra att ägglossningen uteblir. Då stämmer appens uppskattningar sämre.</p>
+        <fieldset class="list choice-list" data-contraception-options="ob-contraception">
+          <legend class="sr-only">Preventivmedel</legend>
+        </fieldset>
+        <div class="ob-actions">
+          <button type="button" class="btn btn-primary" data-ob-next>Nästa</button>
+          <button type="button" class="link wine" data-ob-skip>Vill inte svara</button>
+        </div>
+      </section>
+
+      <!-- 8. Mensskydd -->
+      <section data-ob-step="protection" data-question aria-labelledby="t-prot" hidden>
+        <h1 class="h1" id="t-prot">Vilket mensskydd använder du?</h1>
+        <p class="lead">Välj allt du brukar använda. Vi föreslår ett paket utifrån dina val.</p>
+        <div class="chips ob-chips" data-protection-options aria-label="Mensskydd"></div>
+        <div class="ob-actions">
+          <button type="button" class="btn btn-primary" data-ob-next>Klar</button>
+          <button type="button" class="link wine" data-ob-skip>Hoppa över</button>
+        </div>
+      </section>
+
+      <!-- 9. Klart -->
+      <section data-ob-step="done" aria-labelledby="t-done" hidden>
+        <h1 class="h1" id="t-done">Allt klart, <span data-ob-name></span>!</h1>
+        <p class="lead">Så här har vi ställt in appen åt dig:</p>
+        <ul class="list ob-summary" data-ob-summary></ul>
+        <p class="fineprint">Det du hoppade över räknar appen ut från det du loggar. Du kan ändra allt under Profil.</p>
+        <div class="ob-actions">
+          <a class="btn btn-primary" href="index.html">Kom igång</a>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="onboarding.js"></script>
+</body>
+</html>

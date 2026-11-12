@@ -2,15 +2,18 @@
 <html lang="sv">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mensappen – Mensen närmar sig</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Blomstra – Mensen närmar sig</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
 </head>
 <body>
   <div class="phone">
-    <div class="status">9:41</div>
-
     <main class="screen">
+      <a class="kronblad-badge" href="kronblad.html" aria-label="Kronblad – dina poäng">
+        <svg class="lotus" viewBox="0 0 40 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 28C12.5 22.5 12.5 11.5 20 4c7.5 7.5 7.5 18.5 0 24z"/><path d="M20 28C10 28 4 22 4 10c4.5 1 8 2.8 10.6 5.8"/><path d="M20 28c10 0 16-6 16-18-4.5 1-8 2.8-10.6 5.8"/></svg>
+        <span>Kronblad</span>
+      </a>
       <a class="back" href="index.html">
         <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg>
         Stäng
@@ -32,27 +35,90 @@
       </div>
 
       <h1 class="h1">Mensen närmar sig</h1>
-      <p class="lead">Enligt din cykel kommer mensen om ca 3 dagar. Vill du få ditt paket hemskickat?</p>
+      <p class="lead">Enligt din cykel kommer mensen om ca <span data-days-to-period>17 dagar</span> (<span data-next-period>26 nov</span>). Vill du få ditt paket hemskickat?</p>
 
       <section class="card package-card" aria-label="Ditt paket">
         <p class="eyebrow">DITT PAKET · SAMMA SOM SIST</p>
-        <ul>
+        <ul data-package-summary>
           <li>Bindor dag · 1 förp</li>
           <li>Trosskydd · 1 förp</li>
           <li>Toapapper · 1 förp (tillägg)</li>
         </ul>
-        <div class="total"><span>Totalt</span><span>149 kr</span></div>
-        <p class="note">Leverans 1–2 dagar · Neutral förpackning</p>
+        <div class="total"><span>Totalt</span><span data-package-total>60 kr</span></div>
+        <p class="note"><span data-delivery-note>Leverans 1–2 dagar</span> · Neutral förpackning</p>
       </section>
 
-      <a class="btn btn-primary" href="index.html">Ja, skicka paketet</a>
+      <div class="card paused-card" data-paused-card hidden>
+        <p><b>Leveranserna är pausade</b> till <span data-paused-until></span>.</p>
+        <button type="button" class="btn btn-primary" data-resume>Återuppta leveranser</button>
+      </div>
+
+      <button type="button" class="btn btn-primary" data-order-open aria-haspopup="dialog" aria-controls="order-sheet">Ja, skicka paketet</button>
       <a class="btn btn-outline" href="paket.html">Ändra paket</a>
 
       <div class="split-links">
-        <a class="link" href="index.html">Hoppa över denna gång</a>
-        <a class="link" href="index.html">Pausa 3 mån</a>
+        <a class="link" href="index.html" data-delivery="skipped">Hoppa över denna gång</a>
+        <a class="link" href="index.html" data-delivery="paused" data-pause-link>Pausa 3 mån</a>
       </div>
     </main>
+
+    <div class="sheet" id="order-sheet" role="dialog" aria-modal="true" aria-label="Skicka paketet" hidden>
+      <div class="sheet-backdrop" data-sheet-close></div>
+      <div class="sheet-inner" tabindex="-1">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <button type="button" class="sheet-close" data-sheet-close aria-label="Stäng">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg>
+        </button>
+
+        <!-- Steg 1: bekräfta adress -->
+        <div data-order-step="confirm">
+          <h2 class="sheet-title" id="order-title" tabindex="-1">Skicka till den här adressen?</h2>
+          <div class="card address-card">
+            <p class="address-name" data-address-name></p>
+            <p data-address-lines></p>
+          </div>
+          <ul class="order-facts">
+            <li><span>Paket</span><span data-package-total>60 kr</span></li>
+            <li><span>Kommer</span><span data-order-when>Inom 1–2 dagar</span></li>
+          </ul>
+          <button type="button" class="btn btn-primary" data-order-confirm>Ja, skicka hit</button>
+          <button type="button" class="btn btn-outline" data-order-edit>Nej, ändra adress</button>
+        </div>
+
+        <!-- Steg 2: ändra/lägg till adress -->
+        <form class="form address-form" data-order-step="address" novalidate hidden>
+          <h2 class="sheet-title" tabindex="-1" data-address-form-title>Vart ska paketet?</h2>
+          <div class="field">
+            <label for="order-street">Gatuadress</label>
+            <input class="input" id="order-street" name="street" type="text" autocomplete="street-address" required>
+          </div>
+          <div class="field-pair">
+            <div class="field">
+              <label for="order-zip">Postnummer</label>
+              <input class="input" id="order-zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="6" required>
+            </div>
+            <div class="field">
+              <label for="order-city">Ort</label>
+              <input class="input" id="order-city" name="city" type="text" autocomplete="address-level2" required>
+            </div>
+          </div>
+          <p class="error" data-form-error role="alert"></p>
+          <button type="submit" class="btn btn-primary">Spara adress</button>
+          <button type="button" class="link wine address-cancel" data-order-back>Avbryt</button>
+        </form>
+
+        <!-- Steg 3: kvitto -->
+        <div class="order-done" data-order-step="done" hidden>
+          <div class="done-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25l7 7 13-15"/></svg>
+          </div>
+          <h2 class="sheet-title" tabindex="-1">Ditt paket är skickat!</h2>
+          <p class="sheet-lead" data-order-receipt role="status"></p>
+          <p class="fineprint">Paketet kommer i en neutral förpackning.</p>
+          <a class="btn btn-primary" href="index.html">Klar</a>
+        </div>
+      </div>
+    </div>
 
     <nav class="tabbar" aria-label="Huvudmeny">
       <a class="tab" href="index.html">
@@ -73,5 +139,6 @@
       </a>
     </nav>
   </div>
+  <script src="app.js"></script>
 </body>
 </html>
