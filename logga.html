@@ -50,14 +50,6 @@
       </div>
       </div>
 
-      <div data-sex-section hidden>
-      <p class="label">Skydd</p>
-      <div class="chips" data-single role="group" aria-label="Skydd" data-protection>
-        <button type="button" class="chip" aria-pressed="false">Med skydd</button>
-        <button type="button" class="chip" aria-pressed="false">Utan skydd</button>
-      </div>
-      </div>
-
       <div data-symptom-section>
       <p class="label">Symtom (valfritt)</p>
       <div class="chips" role="group" aria-label="Symtom" data-symptoms>
@@ -76,6 +68,20 @@
         <button type="submit" class="btn btn-primary">Lägg till</button>
         <button type="button" class="link wine" data-cancel>Avbryt</button>
       </form>
+      </div>
+
+      <div data-sex-section hidden>
+      <div class="switch-row log-switch" data-sex-toggle-row hidden>
+        <label for="log-sex">Sex</label>
+        <span class="switch"><input id="log-sex" type="checkbox" role="switch" data-log-sex><span></span></span>
+      </div>
+      <div data-protection-wrap>
+      <p class="label">Skydd</p>
+      <div class="chips" data-single role="group" aria-label="Skydd" data-protection>
+        <button type="button" class="chip" aria-pressed="false">Med skydd</button>
+        <button type="button" class="chip" aria-pressed="false">Utan skydd</button>
+      </div>
+      </div>
       </div>
 
       <label class="label" for="note">Anteckning</label>

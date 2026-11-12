@@ -151,8 +151,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .btn-outline:hover { background: #ffe3e8; }
 
 .btn + .btn { margin-top: 16px; }
-.log-links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
-.log-links .btn + .btn { margin-top: 0; }
 
 /* ---------- Chips ---------- */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -882,6 +880,7 @@ body.multi-mode .screen { padding-bottom: 240px; }
 body.multi-mode .tabbar { visibility: hidden; }
 
 .day-switch { margin-top: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.log-switch { margin-top: 22px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 #day-sheet .label { margin: 16px 0 8px; }
 #day-sheet .sheet-title { padding-right: 44px; }
 .day-more { display: block; text-align: center; margin: 14px auto 0; font-size: 14px; }

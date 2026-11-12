@@ -948,7 +948,38 @@ if (pickBtn && picker) {
 
 const saveLogBtn = document.querySelector("[data-save-log]");
 if (saveLogBtn) {
-  const type = ["symtom", "sex"].includes(params.get("typ")) ? params.get("typ") : "mens";
+  const type = ["symtom", "sex", "dag"].includes(params.get("typ")) ? params.get("typ") : "mens";
+  // "Logga" på översikten: symtom och/eller sex samma dag
+  if (type === "dag") {
+    setText("[data-log-title]", "Logga");
+    document.title = "Blomstra – Logga";
+    setText(".picker-title", "Vilken dag?");
+    document.querySelectorAll("[data-flow-section]").forEach((el) => (el.hidden = true));
+    document.querySelectorAll("[data-sex-section], [data-sex-toggle-row]").forEach((el) => (el.hidden = false));
+    const sexSwitch = document.querySelector("[data-log-sex]");
+    const protWrap = document.querySelector("[data-protection-wrap]");
+    sexSwitch.addEventListener("change", () => (protWrap.hidden = !sexSwitch.checked));
+    const symBox = document.querySelector("[data-symptoms]");
+    const addBtn = symBox.querySelector('[data-action="add-symptom"]');
+    const note = document.querySelector("#note");
+    // Fyll i det som redan är loggat den valda dagen, så att inget skrivs över av misstag
+    const fill = () => {
+      const sym = findLog(logDate, "symtom");
+      const sex = findLog(logDate, "sex");
+      const chosen = new Set(sym ? sym.symptoms : []);
+      chosen.forEach((name) => {
+        if (![...symBox.querySelectorAll(".chip:not([data-action])")].some((c) => c.textContent.trim() === name)) symBox.insertBefore(makeChip(name, true), addBtn);
+      });
+      symBox.querySelectorAll(".chip:not([data-action])").forEach((c) => c.setAttribute("aria-pressed", String(chosen.has(c.textContent.trim()))));
+      sexSwitch.checked = !!sex;
+      protWrap.hidden = !sex;
+      document.querySelectorAll("[data-protection] .chip").forEach((c) => c.setAttribute("aria-pressed", String(!!sex && c.textContent.trim() === sex.protection)));
+      note.value = (sym && sym.note) || (sex && sex.note) || "";
+    };
+    fill();
+    // Byter man dag fylls den dagens loggningar i
+    document.querySelectorAll("[data-date-offset], [data-picker-grid]").forEach((el) => el.addEventListener("click", () => setTimeout(fill, 0)));
+  }
   if (type === "sex") {
     setText("[data-log-title]", "Logga sex");
     document.title = "Blomstra – Logga sex";
@@ -976,6 +1007,29 @@ if (saveLogBtn) {
     const symptoms = pressed("[data-symptoms]");
     const flow = type === "mens" ? pressed("[data-flow]")[0] || "" : "";
     const note = (document.querySelector("#note") || {}).value || "";
+    if (type === "dag") {
+      const sexOn = document.querySelector("[data-log-sex]").checked;
+      const text = note.trim();
+      const sym = findLog(logDate, "symtom");
+      const sex = findLog(logDate, "sex");
+      // Symtom (och anteckningen) sparas som symtomlogg; finns bara sex följer anteckningen med den
+      const noteOnSym = symptoms.length > 0 || !sexOn;
+      if (symptoms.length || (text && noteOnSym)) upsertLog(logDate, "symtom", { symptoms, note: noteOnSym ? text : "" });
+      else if (sym) removeLog(logDate, "symtom");
+      if (sexOn) upsertLog(logDate, "sex", { protection: pressed("[data-protection]")[0] || "", note: noteOnSym ? (sex && sex.note !== text ? sex.note || "" : "") : text });
+      else if (sex) removeLog(logDate, "sex");
+      symptoms.forEach((x) => {
+        if (!DEFAULT_SYMPTOMS.includes(x) && !state.customSymptoms.includes(x)) state.customSymptoms.push(x);
+      });
+      const status = document.querySelector("[data-log-status]");
+      if (saveState()) {
+        saveLogBtn.textContent = "Sparat ✓";
+        const what = [symptoms.length && "symtom", sexOn && "sex"].filter(Boolean).join(" och ");
+        if (status) status.textContent = what ? what.charAt(0).toUpperCase() + what.slice(1) + " sparat " + shortDate(logDate) + "." : "Sparat.";
+        setTimeout(() => location.replace(cameFrom("index.html")), 900);
+      } else if (status) status.textContent = "Kunde inte spara på den här enheten.";
+      return;
+    }
     if (type === "sex") {
       upsertLog(logDate, "sex", { protection: pressed("[data-protection]")[0] || "", note: note.trim() });
       const status = document.querySelector("[data-log-status]");
