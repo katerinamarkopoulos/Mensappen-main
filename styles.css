@@ -48,6 +48,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   border: 1px solid #2a2a2a;
   border-radius: 22px;
   overflow: hidden;
+  overflow: clip; /* clip i stället för hidden så att menyn i botten kan vara sticky */
   display: flex;
   flex-direction: column;
 }
@@ -188,6 +189,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- Tabbar ---------- */
 .tabbar {
+  /* Menyn ligger kvar i botten av skärmen när man scrollar */
+  position: sticky;
+  bottom: 0;
+  z-index: 30;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   background: var(--surface);
