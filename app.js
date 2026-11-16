@@ -608,7 +608,12 @@ if (deliveryTitle && deliveryMeta) {
   const d = state.delivery;
   const sameCycle = d && d.cycleStart === toISO(CYCLE.start);
   const until = d && fromISO(d.until);
-  if (isPaused()) {
+  if (deliveryDue()) {
+    // Samma läge som notisen på Leverans i menyn
+    deliveryTitle.textContent = "Det är dags för nästa leverans!";
+    deliveryTitle.classList.add("due");
+    deliveryMeta.textContent = "Beställ ditt paket under Leverans · Inget skickas utan ditt ja";
+  } else if (isPaused()) {
     deliveryTitle.textContent = "Leveranserna är pausade";
     deliveryMeta.textContent = "Till " + dateWithYear(until) + " · Inget skickas under pausen";
   } else if (d && d.status === "ordered" && sameCycle) {

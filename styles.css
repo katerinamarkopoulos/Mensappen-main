@@ -313,6 +313,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .delivery { margin-top: 20px; }
 .delivery .eyebrow { font-size: 12px; font-weight: 500; letter-spacing: .04em; margin: 0; }
 .delivery h2 { font-size: 16px; font-weight: 500; margin: 8px 0; }
+.delivery h2.due { color: var(--wine); font-weight: 700; }
 .delivery .meta { color: var(--pink); font-size: 13px; margin: 0 0 8px; }
 
 /* ===================================================
