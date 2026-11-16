@@ -124,11 +124,17 @@ const averageLength = (starts) => {
   return gaps.length ? Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length) : 28;
 };
 
-// Snittlängd på mensen: sista loggade mensdagen inom 10 dagar efter varje start, annars 5
+// Slutdagen som användaren loggat med "Mensen är slut" för mensen som började s, annars null
+const periodEndFor = (s) => {
+  const e = (state.periodEnds || []).find((p) => p.start === toISO(s));
+  return e ? fromISO(e.end) : null;
+};
+
+// Snittlängd på mensen: loggad slutdag eller sista loggade mensdagen inom 10 dagar efter varje start, annars 5
 const averagePeriod = (starts) => {
   const mensDays = state.logs.filter((l) => l.type === "mens").map((l) => fromISO(l.date)).filter(Boolean);
   const lengths = starts
-    .map((s) => Math.max(0, ...mensDays.map((d) => daysBetween(s, d)).filter((g) => g >= 0 && g <= 10)) + 1)
+    .map((s) => Math.max(0, ...mensDays.map((d) => daysBetween(s, d)).filter((g) => g >= 0 && g <= 10), periodEndFor(s) ? daysBetween(s, periodEndFor(s)) : 0) + 1)
     .filter((n) => n >= 2)
     .slice(-6);
   return lengths.length ? Math.round(lengths.reduce((a, b) => a + b, 0) / lengths.length) : 5;
@@ -807,6 +813,10 @@ const upsertLog = (date, type, fields) => {
     log = { id: newId(), date: iso, type, flow: "", symptoms: [], note: "" };
     state.logs.push(log);
   }
+  // Loggas en mensdag efter en loggad slutdag pågick mensen längre – slutdagen tas bort
+  if (type === "mens" && state.periodEnds) {
+    state.periodEnds = state.periodEnds.filter((p) => !(p.start <= iso && p.end < iso && daysBetween(fromISO(p.start), date) <= 10));
+  }
   // updated: när loggen senast ändrades – behövs för att kunna slå ihop data mellan enheter utan dubbletter
   Object.assign(log, fields, { start, updated: new Date().toISOString() });
   return log;
@@ -1280,6 +1290,34 @@ if (resetBtn) {
 /* ===============================================================
    Räckte ditt paket? – sparar svaret
 ================================================================ */
+// Finns ett paket som inte fått svar? Då ger svaret ett kronblad.
+const feedbackPending = () => (state.feedback || []).length < (state.orders || []).length;
+const rewardHint = document.querySelector("[data-reward-hint]");
+if (rewardHint) rewardHint.hidden = !feedbackPending();
+if (params.get("efter") === "mens") setText("[data-feedback-kicker]", "Din mens är slut");
+
+// Översikten: "Mensen är slut" medan senaste mensen pågår (inom 10 dagar från starten)
+const endBtn = document.querySelector("[data-period-end]");
+if (endBtn && starts.length) {
+  const last = starts[starts.length - 1];
+  const since = daysBetween(last, today);
+  if (since >= 0 && since <= 10 && !periodEndFor(last)) {
+    endBtn.hidden = false;
+    const came = document.querySelector("[data-period-came]");
+    if (came) came.classList.replace("btn-primary", "btn-outline");
+    endBtn.addEventListener("click", () => {
+      const startIso = toISO(last);
+      state.periodEnds = (state.periodEnds || []).filter((p) => p.start !== startIso);
+      state.periodEnds.push({ start: startIso, end: toISO(today), updated: new Date().toISOString() });
+      saveState();
+      // Räckte-frågan kommer upp direkt om det finns ett paket att svara om
+      if (feedbackPending()) return location.assign("rackte.html?efter=mens");
+      endBtn.textContent = "Sparat – mensen slutade " + fmt(today, { day: "numeric", month: "short" }).replace(".", "") + " ✓";
+      endBtn.disabled = true;
+      setTimeout(() => location.reload(), 1200);
+    });
+  }
+}
 document.querySelectorAll("[data-answer]").forEach((btn) => {
   btn.addEventListener("click", () => {
     const before = kronbladEarned();
@@ -1310,16 +1348,19 @@ const dayInfo = (date) => {
   const d = daysBetween(s, date) + 1;
   const offsets = loggedOffsets(s, next);
   const estimate = offsets.length < 2;
+  const end = periodEndFor(s);
+  // Med loggad slutdag räknas dagarna från start till slut som mens, annars uppskattning
+  const inPeriod = end ? date <= end : estimate && d <= CYCLE.period;
   // Lucka: en dag mellan två loggade mensdagar som inte är loggad – mensen pågick troligen då
   const gap = !logged && !estimate && d - 1 < Math.max(...offsets);
-  if (next) return { period: logged || (estimate && d <= CYCLE.period), gap, ovulation: d === CYCLE.ovulation, day: d, logged };
+  if (next) return { period: logged || inPeriod, gap, ovulation: d === CYCLE.ovulation, day: d, logged };
   // Pågående cykel (fram till idag, även om mensen är sen): bara det som hänt, inga prognoser bakåt i tiden
   if (date <= today || d <= CYCLE.length) {
     return {
       logged,
       gap,
-      period: logged || (estimate && d <= CYCLE.period && date <= today),
-      predicted: !logged && !gap && estimate && d <= CYCLE.period && date > today,
+      period: logged || (inPeriod && date <= today),
+      predicted: !logged && !gap && !end && inPeriod && date > today,
       ovulation: d === CYCLE.ovulation,
       day: d,
     };
@@ -1703,11 +1744,12 @@ const buildPeriods = () => starts.map((start, i) => {
     .filter((l) => { const d = fromISO(l.date); return d && d >= start && d <= cycleEnd; })
     .sort((a, b) => (a.date < b.date ? -1 : 1));
   const mensDays = inCycle.filter((l) => l.type === "mens").map((l) => daysBetween(start, fromISO(l.date))).filter((g) => g <= 10);
-  const loggedLength = Math.max(0, ...mensDays) + 1;
-  const estimated = loggedLength < 2;
+  const end = periodEndFor(start);
+  const loggedLength = Math.max(0, ...mensDays, end ? daysBetween(start, end) : 0) + 1;
+  const estimated = loggedLength < 2 && !end;
   const sinceStart = daysBetween(start, today) + 1;
   // Pågår: senaste starten, inom vanlig menslängd och loggad fram till idag eller igår
-  const ongoing = !next && sinceStart <= CYCLE.period && (estimated || loggedLength >= sinceStart - 1);
+  const ongoing = !end && !next && sinceStart <= CYCLE.period && (estimated || loggedLength >= sinceStart - 1);
   const length = ongoing ? sinceStart : estimated ? CYCLE.period : loggedLength;
   return { start, next, length, estimated, ongoing, sinceStart, cycle: next ? daysBetween(start, next) : null, logs: inCycle };
 });

@@ -39,7 +39,8 @@
         <p class="hint" data-no-logs hidden>Du har inte loggat någon mens än. Logga när din mens börjar, eller tidigare mensar i kalendern, så räknar appen fram din cykel.</p>
       </section>
 
-      <a class="btn btn-primary" href="logga.html?typ=mens">Mensen kom idag</a>
+      <button type="button" class="btn btn-primary" data-period-end hidden>Mensen är slut</button>
+      <a class="btn btn-primary" href="logga.html?typ=mens" data-period-came>Mensen kom idag</a>
       <a class="btn btn-outline" href="logga.html?typ=dag">Logga</a>
 
       <section class="card delivery" aria-label="Leverans">

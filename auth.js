@@ -142,6 +142,7 @@ const newUserState = () => ({
   profile: { age: null, contraception: null, protection: [] },
   delivery: null,
   feedback: [],
+  periodEnds: [], // "Mensen är slut": { start, end } som ISO-datum
 });
 const loadUserState = () => {
   const d = newUserState();

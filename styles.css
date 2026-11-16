@@ -435,6 +435,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
    =================================================== */
 .feedback .kicker { font-size: 15px; margin: 6px 0 10px; }
 .feedback .choices { margin-top: 20px; }
+.reward-hint { display: flex; align-items: center; gap: 12px; margin: 16px 0 0; padding: 12px 14px; border-radius: 12px; background: rgba(223, 98, 160, .12); color: var(--ink); font-size: 14px; line-height: 1.4; }
+.reward-hint .lotus { flex: none; width: 34px; height: 28px; color: var(--pink); }
+.reward-hint strong { color: var(--wine); }
 .feedback .skip { display: block; text-align: center; margin: 14px auto 0; }
 .divider { border: 0; border-top: 1px solid var(--pink); margin: 22px 0; }
 
