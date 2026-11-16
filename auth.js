@@ -67,7 +67,8 @@ const Auth = (() => {
     async login(email, password) {
       const key = norm(email);
       const user = users()[key];
-      if (!user || (await hash(password, user.salt)) !== user.hash) throw new Error("invalid");
+      if (!user) throw new Error(Object.keys(users()).length ? "nouser" : "nousers");
+      if ((await hash(password, user.salt)) !== user.hash) throw new Error("invalid");
       set(SESSION, key);
       return user;
     },

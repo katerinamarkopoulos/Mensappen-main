@@ -35,7 +35,10 @@ if (loginForm) {
       await Auth.login(email.value, password.value);
       location.href = "index.html";
     } catch (err) {
-      formError(loginForm, "Fel e-post eller lösenord.", password);
+      const local = "Konton sparas bara i den webbläsare och på den enhet där de skapades – har du skapat kontot någon annanstans behöver du logga in där eller skapa ett nytt här.";
+      if (err.message === "invalid") formError(loginForm, "Fel lösenord. Försök igen.", password);
+      else if (err.message === "nouser") formError(loginForm, "Det finns inget konto med den e-posten i den här webbläsaren. " + local, email);
+      else formError(loginForm, "Det finns inga konton i den här webbläsaren än. " + local, email);
     }
   });
 }
