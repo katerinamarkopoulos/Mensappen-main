@@ -2187,3 +2187,7 @@ function updateKronbladBadge() {
   });
 }
 updateKronbladBadge();
+
+// Profil: dölj tipset om hemskärmen när appen redan är öppnad därifrån
+const installHint = document.querySelector("[data-install-hint]");
+if (installHint && (navigator.standalone || window.matchMedia("(display-mode: standalone)").matches)) installHint.hidden = true;

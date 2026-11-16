@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Blomstra – Profil</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="ikoner/ikon.svg">
+  <link rel="apple-touch-icon" href="ikoner/ikon-180.png">
+  <meta name="theme-color" content="#efe8f3">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Blomstra">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <script src="auth.js"></script>
 </head>
 <body>
@@ -21,6 +29,16 @@
           <p data-member-since>Medlem sedan november 2026</p>
         </div>
       </div>
+
+      <section class="card install-card" data-install-hint aria-labelledby="install-title">
+        <div class="install-head"><svg class="lotus" viewBox="0 0 40 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 28C12.5 22.5 12.5 11.5 20 4c7.5 7.5 7.5 18.5 0 24z"/><path d="M20 28C10 28 4 22 4 10c4.5 1 8 2.8 10.6 5.8"/><path d="M20 28c10 0 16-6 16-18-4.5 1-8 2.8-10.6 5.8"/></svg><h2 id="install-title">Spara Blomstra på hemskärmen</h2></div>
+        <p>Då öppnas Blomstra som en egen app, du förblir inloggad och din data sparas tryggare.</p>
+        <ul>
+          <li><strong>iPhone:</strong> öppna sidan i Safari, tryck på Dela-knappen och välj <em>Lägg till på hemskärmen</em>.</li>
+          <li><strong>Android:</strong> öppna menyn ⋮ i Chrome och välj <em>Installera app</em> eller <em>Lägg till på startskärmen</em>.</li>
+        </ul>
+        <p class="install-note">På iPhone har hemskärmsappen ett eget minne, så första gången behöver du skapa ditt konto där.</p>
+      </section>
 
       <p class="label wine">Konto</p>
       <div class="list">

@@ -1081,3 +1081,12 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 .cycle .hint { font-size: 13px; font-weight: 400; color: var(--muted); line-height: 1.4; margin: 10px 8px 0; }
 
 [hidden] { display: none !important; }
+
+/* Profil: spara på hemskärmen */
+.install-card { margin: 18px 0 4px; }
+.install-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.install-head .lotus { flex: none; width: 30px; height: 24px; color: var(--pink); }
+.install-card h2 { font-size: 16px; margin: 0; }
+.install-card p, .install-card li { font-size: 14px; line-height: 1.45; margin: 0; }
+.install-card ul { margin: 8px 0; padding-left: 18px; display: grid; gap: 4px; }
+.install-card .install-note { font-size: 12px; color: var(--muted); }
