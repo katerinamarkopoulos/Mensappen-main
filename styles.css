@@ -213,6 +213,26 @@ button { font: inherit; color: inherit; cursor: pointer; }
   color: var(--ink);
 }
 .tab svg { width: 28px; height: 28px; color: var(--pink); }
+.tab { position: relative; }
+/* Notis på Leverans när mensen närmar sig och det är dags för paketet */
+.tab-notis {
+  position: absolute;
+  top: -4px;
+  left: calc(50% + 6px);
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--wine);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--surface);
+  animation: kb-pop .5s cubic-bezier(.3, 1.6, .5, 1);
+}
+@media (prefers-reduced-motion: reduce) { .tab-notis { animation: none; } }
 .tab[aria-current="page"] span {
   font-weight: 700;
   border-bottom: 3px solid var(--pink);

@@ -575,6 +575,31 @@ if (ring) {
 }
 
 /* ===============================================================
+   Notis på Leverans i menyn när det är dags att ta ställning till nästa paket
+================================================================ */
+const deliveryDue = () => {
+  if (isPaused()) return false;
+  const d = state.delivery;
+  const handled = (sameCycle) => d && (d.status === "ordered" || d.status === "skipped") && sameCycle;
+  if (state.package.when === "interval") {
+    const next = nextIntervalDelivery(state.package.interval);
+    return !handled(daysBetween(fromISO(d && d.date), today) < 14) && today >= addDays(next, -CYCLE.askBefore);
+  }
+  if (!CYCLE.hasData) return false; // utan loggad mens vet vi inte när mensen kommer
+  return !handled(d && d.cycleStart === toISO(CYCLE.start)) && today >= askDate;
+};
+if (deliveryDue()) {
+  document.querySelectorAll('.tabbar a[href="leverans.html"]').forEach((tab) => {
+    const notis = document.createElement("b");
+    notis.className = "tab-notis";
+    notis.textContent = "1";
+    notis.setAttribute("aria-hidden", "true");
+    tab.append(notis);
+    tab.setAttribute("aria-label", "Leverans – dags att beställa ditt paket");
+  });
+}
+
+/* ===============================================================
    Översikt: leveranskortet speglar sparade val
 ================================================================ */
 const deliveryTitle = document.querySelector("[data-delivery-title]");
