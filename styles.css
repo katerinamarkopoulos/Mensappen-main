@@ -1072,12 +1072,17 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 .ob-chips { margin-top: 22px; }
 .ob-chips .chip { font-size: 16px; padding: 10px 18px 8px; }
 .ob-list { margin: 18px 0 0; padding-left: 20px; font-size: 15px; line-height: 1.8; }
-.ob-actions { margin-top: auto; padding-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.ob-actions { margin-top: 0; padding-top: 32px; /* knapparna direkt under frågan i stället för längst ner */ display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .ob-actions .btn + .btn { margin-top: 0; }
 .ob-actions .link { border: 0; background: none; font-size: 15px; padding: 6px; }
 .choice-list { margin: 20px 0 0; padding: 0; min-width: 0; }
 .choice-list .row { justify-content: flex-start; min-height: 46px; padding: 6px 14px; }
 .choice-list .row:hover { background: #ffe1e8; }
+/* Kontoskapandet: preventivmedel i två kolumner så att knapparna syns utan att scrolla */
+.onboard .choice-list { display: grid; grid-template-columns: 1fr 1fr; }
+.onboard .choice-list .row { border-top: 1px solid var(--line); min-height: 44px; padding: 6px 10px; font-size: 15px; line-height: 1.2; gap: 8px; }
+.onboard .choice-list .row:nth-child(2), .onboard .choice-list .row:nth-child(3) { border-top: 0; }
+.onboard .choice-list .row:nth-child(even) { border-right: 1px solid var(--line); }
 .editor .choice-list { margin: 0; }
 .editor .note { margin: 10px 0 0; }
 .editor .chips { margin-bottom: 2px; }
