@@ -1,2 +1,22 @@
 .claude/
+.env
+
+.env.*
+
+!.env.example
+
+*.pem
+
+*.key
+
+# Paket och byggfiler
+
+node_modules/
+
+dist/
+
+# Loggar och systemfiler
+
+*.log
+
 .DS_Store
