@@ -364,6 +364,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
   border-radius: var(--radius);
   overflow: hidden;
 }
+/* Listan klipper allt utanför kanten, så fokusramen ritas på insidan av raden */
+.list a:focus-visible, .list button:focus-visible {
+  outline: 2px solid var(--wine);
+  outline-offset: -4px;
+  border-radius: 10px;
+}
 
 .row {
   display: flex;
