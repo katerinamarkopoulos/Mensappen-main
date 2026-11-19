@@ -6,6 +6,7 @@
   --surface: #ffeef0;     /* ljusrosa kort */
   --pink: #df62a0;        /* primär rosa */
   --pink-soft: #df62a0;
+  --pink-text: #b03a74;   /* rosa för text: 4,7:1 mot bakgrunden (WCAG AA) */
   --wine: #a8123f;        /* mörk vinröd */
   --ink: #1f1a1d;
   --muted: #5a5257;
@@ -73,7 +74,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .h1 {
   font-size: 28px;
   font-weight: 700;
-  color: var(--pink);
+  color: var(--pink-text);
   margin: 0;
   line-height: 1.15;
   display: flex;
@@ -146,6 +147,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .btn-primary { background: var(--pink); color: #fff; }
 .btn-primary:hover { filter: brightness(1.05); }
+/* Vit text på rosa har 3,3:1. Fet text från 19 px räknas som stor text i WCAG AA (krav 3:1). */
+.btn.btn-primary, .add-form .btn-primary, .editor-actions .btn-primary { font-size: 19px; font-weight: 700; }
 
 .btn-outline {
   background: var(--surface);
@@ -252,7 +255,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   background: none;
   border: 0;
   padding: 4px 0;
-  color: var(--pink);
+  color: var(--pink-text);
   font-weight: 600;
   font-size: 15px;
   margin: 18px 0 10px;
@@ -314,7 +317,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .delivery .eyebrow { font-size: 12px; font-weight: 500; letter-spacing: .04em; margin: 0; }
 .delivery h2 { font-size: 16px; font-weight: 500; margin: 8px 0; }
 .delivery h2.due { color: var(--wine); font-weight: 700; }
-.delivery .meta { color: var(--pink); font-size: 13px; margin: 0 0 8px; }
+.delivery .meta { color: var(--pink-text); font-size: 13px; margin: 0 0 8px; }
 
 /* ===================================================
    Skärm 2 – Logga din mens
@@ -804,7 +807,7 @@ a.row:hover, button.row:hover { background: #ffe1e8; }
 }
 .sheet-close svg { width: 12px; height: 12px; }
 .sheet-range { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--wine); margin: 8px 0 4px; }
-.sheet-title { font-size: 26px; font-weight: 700; color: var(--pink); margin: 0 0 8px; }
+.sheet-title { font-size: 26px; font-weight: 700; color: var(--pink-text); margin: 0 0 8px; }
 .sheet-lead { font-size: 15px; line-height: 1.45; margin: 0 0 6px; }
 .sheet .btn { margin-top: 18px; }
 .sheet .fineprint { margin-top: 12px; }
@@ -820,7 +823,7 @@ a.row:hover, button.row:hover { background: #ffe1e8; }
 .phase-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .phase-range { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--wine); }
 .badge { background: var(--wine); color: #fff; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 4px 10px 2px; }
-.phase-card h2 { font-size: 20px; font-weight: 700; color: var(--pink); margin: 6px 0 6px; }
+.phase-card h2 { font-size: 20px; font-weight: 700; color: var(--pink-text); margin: 6px 0 6px; }
 .phase-lead { font-size: 15px; line-height: 1.45; margin: 0; }
 
 /* ---------- Leverans: valt datum och pausade leveranser ---------- */
@@ -977,7 +980,7 @@ body.multi-mode .tabbar { visibility: hidden; }
 .period-logs li { padding: 8px 0 0; }
 .period-logs b { display: block; font-size: 14px; font-weight: 600; }
 .period-logs span { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
-.empty-history h2 { font-size: 17px; color: var(--pink); margin: 0 0 6px; }
+.empty-history h2 { font-size: 17px; color: var(--pink-text); margin: 0 0 6px; }
 .empty-history p { font-size: 14px; line-height: 1.45; margin: 0; }
 .history-log { margin-top: 22px; }
 
@@ -994,7 +997,7 @@ body.multi-mode .tabbar { visibility: hidden; }
   padding: 6px 6px 4px;
   min-width: 56px;
   border-radius: 12px;
-  color: var(--pink);
+  color: var(--pink-text);
   text-decoration: none;
 }
 .kronblad-badge .lotus { width: 34px; height: 28px; }
@@ -1065,7 +1068,7 @@ svg.reward-img { padding: 12px; fill: var(--pink); }
 .welcome { justify-content: center; text-align: center; }
 .welcome-art { width: 190px; height: 190px; margin: 0 auto 18px; }
 .welcome-art svg { width: 100%; height: 100%; display: block; overflow: visible; }
-.welcome-title { justify-content: center; font-size: 34px; color: var(--pink); }
+.welcome-title { justify-content: center; font-size: 34px; color: var(--pink-text); }
 .welcome-slogan { margin: 4px 0 0; font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--wine, #7a2e52); }
 .welcome .lead { max-width: 290px; margin: 10px auto 0; }
 .welcome-actions { margin-top: 36px; }
@@ -1117,7 +1120,7 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 .ob-summary .row { font-size: 15px; }
 .ob-summary .value { text-align: right; }
 
-.row .value .empty { color: var(--pink); font-weight: 600; }
+.row .value .empty { color: var(--pink-text); font-weight: 600; }
 .cycle .hint { font-size: 13px; font-weight: 400; color: var(--muted); line-height: 1.4; margin: 10px 8px 0; }
 
 [hidden] { display: none !important; }
