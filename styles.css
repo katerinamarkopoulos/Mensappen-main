@@ -172,7 +172,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .chip[aria-pressed="true"] {
   background: var(--pink);
-  color: #fff;
+  color: var(--ink); /* mörk text: 5,2:1 mot rosa */
 }
 .chip[aria-pressed="true"]::before { content: "✓ "; }
 
@@ -682,7 +682,7 @@ a.row:hover, button.row:hover { background: #ffe1e8; }
 .picker .month-nav button:disabled { opacity: .3; cursor: default; }
 .picker .day { width: 36px; height: 36px; cursor: pointer; }
 .picker .day:disabled { color: #b9aab2; cursor: default; background: none; }
-.picker .day.selected { background: var(--pink); color: #fff; font-weight: 700; }
+.picker .day.selected { background: var(--pink); color: var(--ink); font-weight: 700; }
 
 .add-form {
   display: flex;
@@ -1060,8 +1060,8 @@ svg.reward-img { padding: 12px; fill: var(--pink); }
 .reward-btn { flex: none; font: inherit; font-size: 12px; font-weight: 600; border-radius: var(--radius-pill); padding: 7px 10px; white-space: nowrap; border: 1.5px solid var(--line); background: transparent; color: var(--muted); }
 .reward-btn:disabled { cursor: not-allowed; }
 .reward.ready { border-color: var(--pink); }
-.reward.ready .reward-btn { background: var(--pink); border-color: var(--pink); color: #fff; cursor: pointer; }
-.reward.ready .reward-btn:hover { background: var(--wine); border-color: var(--wine); }
+.reward.ready .reward-btn { background: var(--pink); border-color: var(--pink); color: var(--ink); cursor: pointer; }
+.reward.ready .reward-btn:hover { background: var(--wine); border-color: var(--wine); color: #fff; }
 .my-rewards { margin-bottom: 8px; }
 
 /* ---------- Konto: välkommen, logga in, skapa konto ---------- */
